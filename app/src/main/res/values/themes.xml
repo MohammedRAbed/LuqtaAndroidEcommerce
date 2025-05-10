@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.LuqtaEcommerce" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.LuqtaEcommerce" parent="android:Theme.Material.Light.NoActionBar">
+    </style>
+
+    <style name="Theme.LuqtaEcommerce.Splash" parent="Theme.SplashScreen">
+        <!-- Set your background color -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <!-- Set your splash icon -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/app_temp_logo2</item>
+
+        <!-- Optional: Duration and animation -->
+        <item name="postSplashScreenTheme">@style/Theme.LuqtaEcommerce</item>
+    </style>
 </resources>

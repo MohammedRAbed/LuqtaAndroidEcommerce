@@ -66,4 +66,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    /*--- ADDED BY ME ---*/
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    // ViewModel for MVVM
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+
 }
