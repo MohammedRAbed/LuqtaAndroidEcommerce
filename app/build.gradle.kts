@@ -75,4 +75,7 @@ dependencies {
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
+    // Koin
+    implementation (libs.insert.koin.koin.android)
+    implementation (libs.koin.androidx.compose) // for Compose
 }

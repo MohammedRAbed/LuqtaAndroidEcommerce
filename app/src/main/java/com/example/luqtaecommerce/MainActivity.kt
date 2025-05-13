@@ -1,24 +1,31 @@
 package com.example.luqtaecommerce
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.luqtaecommerce.di.appModule
 import com.example.luqtaecommerce.presentation.navigation.LuqtaNavGraph
-import com.example.luqtaecommerce.presentation.splash.SplashViewModel
 import com.example.luqtaecommerce.ui.theme.LuqtaEcommerceTheme
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
-
-     // private val splashViewModel by viewModels<SplashViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Show system splash until loading is done (Android 12+)
@@ -28,8 +35,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(appModule)
+        }
 
+        // handle status bar ( white bg, black items (battery, wifi, etc.) )
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
         window.statusBarColor = Color.parseColor("#FFFFFFFF")
         windowInsetsController.isAppearanceLightStatusBars = true
@@ -44,12 +56,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun LuqtaApp() {
         val navController = rememberNavController()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            val splashViewModel: SplashViewModel = viewModel()
-            LuqtaNavGraph(navController, splashViewModel)
-        } else {
-            LuqtaNavGraph(navController, null)
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars)
+            ) {
+                LuqtaNavGraph(navController)
+            }
         }
-
     }
 }

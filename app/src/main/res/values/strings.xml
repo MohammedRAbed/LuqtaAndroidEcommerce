@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Luqta</string>
+    <string name="create_new_account">إنشاء حساب جديد</string>
+    <string name="add_account">إنشاء حساب</string>
+    <string name="enter_password">أدخل كلمة المرور</string>
+    <string name="confirm_password">"تأكيد كلمة المرور "</string>
+    <string name="password">"كلمة المرور "</string>
+    <string name="email_example">مثال: yousefmo@gmail.com</string>
+    <string name="email">"البريد الإلكتروني "</string>
+    <string name="full_name_example">مثال: محمد يوسف</string>
+    <string name="full_name">"الاسم الكامل "</string>
+    <string name="login">تسجيل دخول</string>
+    <string name="already_have_account">"لديك حساب؟ "</string>
 </resources>
