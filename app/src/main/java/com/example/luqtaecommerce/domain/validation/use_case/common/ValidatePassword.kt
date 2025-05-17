@@ -1,6 +1,6 @@
-package com.example.luqtaecommerce.domain.validation.signup
+package com.example.luqtaecommerce.domain.validation.use_case.common
 
-import com.example.luqtaecommerce.domain.validation.ValidationResult
+import com.example.luqtaecommerce.domain.validation.model.ValidationResult
 
 class ValidatePassword {
     operator fun invoke(password: String): ValidationResult {

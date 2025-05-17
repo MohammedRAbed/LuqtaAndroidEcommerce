@@ -1,10 +1,10 @@
-package com.example.luqtaecommerce.presentation.signup
+package com.example.luqtaecommerce.presentation.auth.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.validation.signup.ValidateEmail
-import com.example.luqtaecommerce.domain.validation.signup.ValidateFullName
-import com.example.luqtaecommerce.domain.validation.signup.ValidatePassword
+import com.example.luqtaecommerce.domain.validation.use_case.common.ValidateEmail
+import com.example.luqtaecommerce.domain.validation.use_case.signup.ValidateFullName
+import com.example.luqtaecommerce.domain.validation.use_case.common.ValidatePassword
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -77,23 +77,13 @@ class SignupViewModel(
         val emailResult = validateEmail(_signupState.value.email)
         val passwordResult = validatePassword(_signupState.value.password)
         val confirmPasswordResult = passwordResult.successful && _signupState.value.password == _signupState.value.confirmPassword
-        _signupState.update {
-            it.copy(
-                fullNameError = fullNameResult.errorMessage,
-                isFullNameValid = fullNameResult.successful,
-                emailError = emailResult.errorMessage,
-                isEmailValid = emailResult.successful,
-                passwordError = passwordResult.errorMessage,
-                isPasswordValid = passwordResult.successful,
-                isConfirmPasswordValid = confirmPasswordResult
-            )
-        }
+
 
         // Proceed with signup only if all validations pass
         if (fullNameResult.successful &&
             emailResult.successful &&
             passwordResult.successful &&
-            _signupState.value.password == _signupState.value.confirmPassword) {
+            confirmPasswordResult) {
 
             _signupState.update { it.copy(isLoading = true) }
 

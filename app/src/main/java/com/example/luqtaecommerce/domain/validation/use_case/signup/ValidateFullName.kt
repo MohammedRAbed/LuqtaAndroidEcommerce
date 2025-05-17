@@ -1,6 +1,6 @@
-package com.example.luqtaecommerce.domain.validation.signup
+package com.example.luqtaecommerce.domain.validation.use_case.signup
 
-import com.example.luqtaecommerce.domain.validation.ValidationResult
+import com.example.luqtaecommerce.domain.validation.model.ValidationResult
 
 class ValidateFullName {
     operator fun invoke(fullName: String): ValidationResult {

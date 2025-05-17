@@ -1,5 +1,6 @@
-package com.example.luqtaecommerce.presentation.signup
+package com.example.luqtaecommerce.presentation.auth.signup
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.graphics.Color
@@ -23,7 +24,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
+import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LuqtaEcommerceTheme
@@ -33,6 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignupScreen(
+    navController: NavController,
     viewModel: SignupViewModel = koinViewModel()
 ) {
     val signupState by viewModel.signupState.collectAsState()
@@ -42,7 +47,8 @@ fun SignupScreen(
     // show Toast whenever these values change (success/fail)
     LaunchedEffect(signupState.signupSuccessful) {
         if (signupState.signupSuccessful) {
-            Toast.makeText(context, "تم إنشاء الحساب بنجاح ✅", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                context.getString(R.string.signup_successful), Toast.LENGTH_SHORT).show()
 
             /* Navigate to next screen */
 
@@ -84,7 +90,10 @@ fun SignupScreen(
                 text = stringResource(R.string.login),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = PrimaryCyan
+                color = PrimaryCyan,
+                modifier = Modifier.clickable {
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -195,6 +204,7 @@ fun SignupScreen(
             placeholder = stringResource(R.string.enter_password),
             passwordVisible = passwordVisible,
             onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
+            imeAction = ImeAction.Done,
             isValid = signupState.isConfirmPasswordValid,
             errorMessage = signupState.confirmPasswordError
         )
@@ -216,17 +226,17 @@ fun SignupScreen(
             )
         }
 
-        /*
+
         // Show the error
-        signupState.signupError?.let { error ->
+        //signupState.signupError?.let { error ->
             Text(
-                text = error,
+                text = "${signupState.fullName}\n${signupState.email}\n${signupState.password}\n${signupState.confirmPassword}",
                 fontWeight = FontWeight.Medium,
                 color = RedFont,
                 modifier = Modifier.padding(top = 8.dp)
             )
-        }
-         */
+        //}
+
     }
 }
 
@@ -293,7 +303,7 @@ fun PasswordTextField(
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
+            imeAction = imeAction
         ),
         trailingIcon = {
             IconButton(onClick = onTogglePasswordVisibility) {
@@ -349,7 +359,7 @@ fun SignupScreenPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl){
         LuqtaEcommerceTheme {
             val viewModel: SignupViewModel = viewModel()
-            SignupScreen(viewModel)
+            SignupScreen(rememberNavController(), viewModel)
         }
     }
 }

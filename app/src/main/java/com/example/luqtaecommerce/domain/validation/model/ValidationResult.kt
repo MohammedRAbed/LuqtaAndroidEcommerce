@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.domain.validation
+package com.example.luqtaecommerce.domain.validation.model
 
 data class ValidationResult(
     val successful: Boolean,

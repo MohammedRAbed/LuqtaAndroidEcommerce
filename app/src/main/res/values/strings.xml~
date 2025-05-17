@@ -18,7 +18,7 @@
     <string name="password_updated_successfully">تم تحديث كلمة المرور بنجاح ✅</string>
     <string name="change_password_title">تغيير كلمة المرور</string>
     <string name="email_confirmation">تأكيد البريد الإلكتروني</string>
-    <string name="enter_confirmation_email">أدخل البريد الإلكتروني لإرسال كود التحقق.</string>
+    <string name="enter_confirmation_email">.أدخل البريد الإلكتروني لإرسال كود التحقق</string>
     <string name="send">إرسال</string>
     <string name="email_verification">التحقق من البريد الإلكتروني</string>
     <string name="enter_verification_code">أدخل رمز التحقق المكون من 6 أرقام المرسل إلى عنوان بريدك الإلكتروني.</string>

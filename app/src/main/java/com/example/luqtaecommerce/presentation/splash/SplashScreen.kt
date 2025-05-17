@@ -29,8 +29,9 @@ fun SplashScreen(
 
     LaunchedEffect(isLoading) {
         if(!isLoading) {
-            navController.navigate(Screen.Signup.route) {
-                popUpTo(Screen.Splash.route) { inclusive = true }
+            navController.navigate(Screen.Login.route) {
+                popUpTo(0)
+                launchSingleTop = true
             }
         }
     }

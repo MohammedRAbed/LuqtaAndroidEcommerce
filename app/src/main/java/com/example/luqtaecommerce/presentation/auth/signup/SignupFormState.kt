@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.signup
+package com.example.luqtaecommerce.presentation.auth.signup
 
 data class SignupFormState(
     val fullName: String = "",

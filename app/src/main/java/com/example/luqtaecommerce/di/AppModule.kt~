@@ -5,7 +5,6 @@ import com.example.luqtaecommerce.domain.validation.use_case.common.ValidateEmai
 import com.example.luqtaecommerce.domain.validation.use_case.signup.ValidateFullName
 import com.example.luqtaecommerce.domain.validation.use_case.common.ValidatePassword
 import com.example.luqtaecommerce.domain.validation.use_case.forgot_password.ValidateForgotPasswordCode
-import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -26,8 +25,5 @@ val appModule = module {
     }
     viewModel {
         LoginViewModel(get(), get(), get())
-    }
-    viewModel {
-        ForgotPasswordViewModel(get(), get(), get())
     }
 }
