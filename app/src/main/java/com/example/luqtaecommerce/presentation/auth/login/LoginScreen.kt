@@ -58,6 +58,10 @@ fun LoginScreen(
             Toast.makeText(context, context.getString(R.string.login_successful), Toast.LENGTH_SHORT).show()
 
             /* Navigate to next screen */
+            navController.navigate(Screen.Main.route) {
+                popUpTo(Screen.Login.route) { inclusive = true }
+                launchSingleTop = true
+            }
 
             // reset fields
             viewModel.resetLoginForm()

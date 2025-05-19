@@ -49,8 +49,10 @@ fun ForgotPasswordScreen(
     // show Toast whenever these values change (success/fail)
     LaunchedEffect(forgotPasswordState.passwordSaved) {
         if (forgotPasswordState.passwordSaved) {
-            Toast.makeText(context,
-                context.getString(R.string.password_updated_successfully), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.password_updated_successfully), Toast.LENGTH_SHORT
+            ).show()
 
             /* Navigate to next screen */
             navController.popBackStack()
@@ -72,7 +74,7 @@ fun ForgotPasswordScreen(
                 .fillMaxWidth()
                 .padding(vertical = 17.dp),
             verticalAlignment = Alignment.CenterVertically
-            ) {
+        ) {
             IconButton(
                 modifier = Modifier.padding(end = 0.dp),
                 onClick = { navController.popBackStack() }
@@ -89,7 +91,7 @@ fun ForgotPasswordScreen(
             )
             Spacer(modifier = Modifier.weight(1f)) // Push the next item to the end
             Text(
-                text = "0${forgotPasswordState.step+1}", // Replace with your trailing text
+                text = "0${forgotPasswordState.step + 1}", // Replace with your trailing text
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -100,6 +102,7 @@ fun ForgotPasswordScreen(
                 fontWeight = FontWeight.Medium
             )
         }
+
 
         when (forgotPasswordState.step) {
             0 -> {
@@ -135,7 +138,7 @@ fun ForgotPasswordScreen(
 @Preview
 @Composable
 private fun ForgotPasswordScreenP() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl){
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         ForgotPasswordScreen(rememberNavController())
     }
 }

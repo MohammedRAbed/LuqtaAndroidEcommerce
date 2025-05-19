@@ -43,7 +43,7 @@ class LoginViewModel(
 
     fun onLogin() {
         val validationResult = validateLogin(_loginState.value.email, _loginState.value.password)
-        if (!validationResult.successful) {
+        if (/*!validationResult.successful*/false) {
             _loginState.update {
                 it.copy(
                     loginError = "${validationResult.errorMessage} ⚠️"

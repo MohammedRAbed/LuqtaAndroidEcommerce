@@ -78,4 +78,7 @@ dependencies {
     // Koin
     implementation (libs.insert.koin.koin.android)
     implementation (libs.koin.androidx.compose) // for Compose
+
+    // Bottom Navigation
+    implementation (libs.material3)
 }

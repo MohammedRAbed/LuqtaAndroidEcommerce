@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordScreen
-import com.example.luqtaecommerce.presentation.home.HomeScreen
 import com.example.luqtaecommerce.presentation.auth.login.LoginScreen
 import com.example.luqtaecommerce.presentation.auth.signup.SignupScreen
 import com.example.luqtaecommerce.presentation.splash.SplashScreen
@@ -27,66 +26,48 @@ fun LuqtaNavGraph(
         navController = navController,
         startDestination = if (isPreAndroid12) Screen.Splash.route else Screen.Login.route
     ) {
-        // Only for Android < 22 (SDK < 31)
-        composable(Screen.Splash.route) {
-            val splashViewModel: SplashViewModel = viewModel()
-            SplashScreen(navController, splashViewModel)
-        }
 
+        // Only for Android < 22 (SDK < 31)
         composable(
-            route = Screen.Signup.route,
-            enterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { it }, // from right (forward nav)
-                    animationSpec = tween(900)
-                )
-            },
+            route = Screen.Splash.route,
+            enterTransition = null,
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left (forward nav)
+                    targetOffsetX = { it }, // 👉 to right
                     animationSpec = tween(900)
                 )
             },
-            popEnterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { -it }, // from left (backward nav)
-                    animationSpec = tween(900)
-                )
-            },
-            popExitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { it }, // to right (back nav)
-                    animationSpec = tween(900)
-                )
-            }
+            popEnterTransition = null,
+            popExitTransition = null
         ) {
-            SignupScreen(navController)
+            val splashViewModel: SplashViewModel = viewModel()
+            SplashScreen(navController, splashViewModel)
         }
 
         composable(
             route = Screen.Login.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left (backward nav)
-                    animationSpec = tween(900)
+                    initialOffsetX = { -it }, // 👈 from left
+                    animationSpec = tween(600)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left (forward nav)
-                    animationSpec = tween(900)
+                    targetOffsetX = { it }, // 👉 to right
+                    animationSpec = tween(600)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left (backward nav)
-                    animationSpec = tween(900)
+                    initialOffsetX = { it }, // 👈 from right
+                    animationSpec = tween(600)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right (back nav)
-                    animationSpec = tween(900)
+                    targetOffsetX = { -it }, // 👈 to left
+                    animationSpec = tween(600)
                 )
             }
         ) {
@@ -94,35 +75,93 @@ fun LuqtaNavGraph(
         }
 
         composable(
-            route = Screen.ForgotPassword.route,
+            route = Screen.Signup.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right (forward nav)
-                    animationSpec = tween(900)
+                    initialOffsetX = { -it }, // 👉 from left
+                    animationSpec = tween(600)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left (forward nav)
-                    animationSpec = tween(900)
+                    targetOffsetX = { it }, // 👉 to right
+                    animationSpec = tween(600)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left (backward nav)
-                    animationSpec = tween(900)
+                    initialOffsetX = { it }, // 👈 from right
+                    animationSpec = tween(600)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right (back nav)
-                    animationSpec = tween(900)
+                    targetOffsetX = { -it }, // 👈 to left
+                    animationSpec = tween(600)
+                )
+            }
+        ) {
+            SignupScreen(navController)
+        }
+
+        composable(
+            route = Screen.ForgotPassword.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it }, // 👉 from left
+                    animationSpec = tween(600)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it }, // 👉 to right
+                    animationSpec = tween(600)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it }, // 👈 from right
+                    animationSpec = tween(600)
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it }, // 👈 to left
+                    animationSpec = tween(600)
                 )
             }
         ) {
             ForgotPasswordScreen(navController)
         }
 
-        composable(Screen.Home.route) { HomeScreen() }
+        composable(
+            route = Screen.Main.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it }, // 👉 from left
+                    animationSpec = tween(600)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it }, // 👉 to right
+                    animationSpec = tween(600)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it }, // 👈 from right
+                    animationSpec = tween(600)
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it }, // 👈 to left
+                    animationSpec = tween(600)
+                )
+            }
+        ) {
+            MainScreen()
+        }
     }
 }

@@ -77,7 +77,7 @@ fun CodeVerificationStep(
         Spacer(modifier = Modifier.height(16.dp))
 
         // OTP Input Field
-        VerificationCodeInput(
+        OtpInputField(
             codeValue = forgotPasswordState.code,
             onValueChange = { viewModel.onCodeChanged(it) },
             isValid = forgotPasswordState.isCodeValid
@@ -117,7 +117,7 @@ fun CodeVerificationStep(
 }
 
 @Composable
-private fun VerificationCodeInput(
+private fun OtpInputField(
     codeValue: String,
     onValueChange: (String) -> Unit,
     isValid: Boolean? = null

@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.home
+package com.example.luqtaecommerce.presentation.main.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("It's Home!", fontSize = 30.sp);
+        Text("الرئيسية", fontSize = 30.sp);
     }
 }
