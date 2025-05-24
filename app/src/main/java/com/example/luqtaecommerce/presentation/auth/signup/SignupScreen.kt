@@ -1,5 +1,6 @@
 package com.example.luqtaecommerce.presentation.auth.signup
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -65,6 +66,7 @@ fun SignupScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 35.dp),
         verticalArrangement = Arrangement.Top

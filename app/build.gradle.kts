@@ -70,8 +70,10 @@ dependencies {
     /*--- ADDED BY ME ---*/
     // Navigation
     implementation(libs.androidx.navigation.compose)
+
     // ViewModel for MVVM
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
@@ -81,4 +83,14 @@ dependencies {
 
     // Bottom Navigation
     implementation (libs.material3)
+
+    // Coil (for image loading)
+    implementation(libs.coil.compose)
+
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    // GSON converter for Retrofit (to parse JSON responses into Kotlin objects)
+    implementation(libs.converter.gson)
+    // OkHttp logging interceptor (very useful for debugging API requests/responses)
+    implementation(libs.logging.interceptor)
 }

@@ -24,12 +24,6 @@ val bottomNavItems = listOf(
         Screen.Categories.route
     ),
     BottomNavItem(
-        "السلة",
-        R.drawable.ic_cart,
-        R.drawable.ic_cart_selected,
-        Screen.Cart.route
-    ),
-    BottomNavItem(
         "المفضلة",
         R.drawable.ic_watchlist,
         R.drawable.ic_watchlist_selected,

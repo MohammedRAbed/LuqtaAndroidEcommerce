@@ -1,8 +1,8 @@
-package com.example.luqtaecommerce.domain.validation.use_case.login
+package com.example.luqtaecommerce.domain.use_case.validation.login
 
-import com.example.luqtaecommerce.domain.validation.model.ValidationResult
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidateEmail
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidatePassword
+import com.example.luqtaecommerce.domain.use_case.validation.ValidationResult
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidateEmail
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidatePassword
 
 class ValidateLogin(
     private val validateEmail: ValidateEmail,

@@ -1,6 +1,6 @@
-package com.example.luqtaecommerce.domain.validation.use_case.forgot_password
+package com.example.luqtaecommerce.domain.use_case.validation.forgot_password
 
-import com.example.luqtaecommerce.domain.validation.model.ValidationResult
+import com.example.luqtaecommerce.domain.use_case.validation.ValidationResult
 
 class ValidateForgotPasswordCode {
     operator fun invoke(code: String): ValidationResult {

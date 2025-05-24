@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.main.watchlist
+package com.example.luqtaecommerce.presentation.main.cart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun WatchlistScreen(modifier: Modifier = Modifier) {
+fun CartScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("المفضلة", fontSize = 30.sp);
+        Text("السلة", fontSize = 30.sp);
     }
 }

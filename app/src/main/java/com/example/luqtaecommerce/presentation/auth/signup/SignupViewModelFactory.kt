@@ -2,9 +2,9 @@ package com.example.luqtaecommerce.presentation.auth.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidateEmail
-import com.example.luqtaecommerce.domain.validation.use_case.signup.ValidateFullName
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidatePassword
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidateEmail
+import com.example.luqtaecommerce.domain.use_case.validation.signup.ValidateFullName
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidatePassword
 
 class SignupViewModelFactory(
     private val validateFullName: ValidateFullName,

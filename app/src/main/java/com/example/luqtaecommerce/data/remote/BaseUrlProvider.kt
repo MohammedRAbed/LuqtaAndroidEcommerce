@@ -1,0 +1,19 @@
+package com.example.luqtaecommerce.data.remote
+
+import kotlinx.coroutines.runBlocking
+
+object BaseUrlProvider {
+    fun getBaseUrl(): String {
+        return if (NetworkUtil.isRunningOnEmulator()) {
+            "http://10.0.2.2:8000/"
+        } else {
+            runBlocking {
+                when {
+                    NetworkUtil.isHostReachable("192.168.1.71") -> "http://192.168.1.71:8000/"
+                    NetworkUtil.isHostReachable("192.168.1.5") -> "http://192.168.1.5:8000/"
+                    else -> throw IllegalStateException("No reachable server found on local network.")
+                }
+            }
+        }
+    }
+}

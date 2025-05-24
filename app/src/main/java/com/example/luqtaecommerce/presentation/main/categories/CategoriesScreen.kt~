@@ -131,23 +131,18 @@ fun CategoriesScreen(
                 is Result.Error -> {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_error),
-                            modifier = Modifier.size(200.dp),
+                            modifier = Modifier.fillMaxWidth(0.7f),
                             contentDescription = "Error"
                         )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
                         Text(
                             text = "حدث خطأ أثناء تحميل التصنيفات.",
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
                         )
-
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Button(

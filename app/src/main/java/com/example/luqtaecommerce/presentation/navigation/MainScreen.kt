@@ -4,12 +4,10 @@ package com.example.luqtaecommerce.presentation.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,15 +15,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.luqtaecommerce.presentation.main.CustomBottomNavItem
+import com.example.luqtaecommerce.presentation.main.cart.CartScreen
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesScreen
 import com.example.luqtaecommerce.presentation.main.home.HomeScreen
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
 import com.example.luqtaecommerce.presentation.main.watchlist.WatchlistScreen
+import com.example.luqtaecommerce.ui.theme.LightPrimary
 
 @Composable
 fun MainScreen() {
@@ -36,6 +40,7 @@ fun MainScreen() {
     val screenOrder = listOf(
         Screen.Home.route,
         Screen.Categories.route,
+        Screen.Cart.route,
         Screen.Watchlist.route,
         Screen.Profile.route
     )
@@ -44,25 +49,35 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .drawBehind {
+                        val strokeWidth = 1.dp.toPx()
+                        val y = 0f // Draw at the top edge
+                        drawLine(
+                            color = LightPrimary,
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = strokeWidth
+                        )
+                    }
+            ) {
                 bottomNavItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
+                    val isSelected = currentRoute == item.route
+                    CustomBottomNavItem(
+                        item = item,
+                        isSelected = isSelected,
                         onClick = {
-                            if (currentRoute != item.route) {
+                            if (!isSelected) {
                                 navController.navigate(item.route) {
                                     popUpTo(Screen.Home.route) { inclusive = false }
                                     launchSingleTop = true
                                 }
                             }
                         },
-                        icon = { Icon(
-                                painter = painterResource(
-                                    id = if (currentRoute == item.route) item.selectedIcon else item.icon
-                                ),
-                                contentDescription = item.title)
-                               },
-                        label = { Text(item.title) }
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -121,7 +136,8 @@ fun MainScreen() {
 
                     when (route) {
                         Screen.Home.route -> HomeScreen()
-                        Screen.Categories.route -> CategoriesScreen()
+                        Screen.Categories.route -> CategoriesScreen(navController)
+                        Screen.Cart.route -> CartScreen()
                         Screen.Watchlist.route -> WatchlistScreen()
                         Screen.Profile.route -> ProfileScreen()
                     }

@@ -2,9 +2,9 @@ package com.example.luqtaecommerce.presentation.auth.forgot_password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidateEmail
-import com.example.luqtaecommerce.domain.validation.use_case.common.ValidatePassword
-import com.example.luqtaecommerce.domain.validation.use_case.forgot_password.*
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidateEmail
+import com.example.luqtaecommerce.domain.use_case.validation.common.ValidatePassword
+import com.example.luqtaecommerce.domain.use_case.validation.forgot_password.ValidateForgotPasswordCode
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

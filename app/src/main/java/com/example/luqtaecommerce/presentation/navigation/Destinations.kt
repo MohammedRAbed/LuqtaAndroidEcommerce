@@ -11,6 +11,7 @@ sealed class Screen(val route: String) {
     data object Main : Screen("main") // will hold bottom nav container
     data object Home : Screen("home")
     data object Categories : Screen("categories")
+    data object Cart : Screen("cart")
     data object Watchlist : Screen("watchlist")
     data object Profile : Screen("profile")
 }
