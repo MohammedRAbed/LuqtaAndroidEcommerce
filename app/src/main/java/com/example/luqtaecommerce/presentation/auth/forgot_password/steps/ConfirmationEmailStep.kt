@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordFormState
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
-import com.example.luqtaecommerce.presentation.auth.signup.CustomButton
-import com.example.luqtaecommerce.presentation.auth.signup.CustomTextField
+import com.example.luqtaecommerce.ui.components.LuqtaButton
+import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import com.example.luqtaecommerce.ui.theme.RedFont
@@ -70,7 +70,7 @@ fun ConfirmationEmailStep(
             )
         }
 
-        CustomTextField(
+        LuqtaTextField(
             value = forgotPasswordState.email,
             onValueChange = { viewModel.onEmailChanged(it) },
             placeholder = stringResource(R.string.email_example),
@@ -92,7 +92,7 @@ fun ConfirmationEmailStep(
                 color = PrimaryCyan
             )
         } else {
-            CustomButton(
+            LuqtaButton(
                 text = stringResource(R.string.send),
                 onClick = { viewModel.onSendEmail() }
             )

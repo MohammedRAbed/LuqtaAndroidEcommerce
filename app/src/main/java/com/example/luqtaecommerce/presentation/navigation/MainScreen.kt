@@ -2,8 +2,15 @@ package com.example.luqtaecommerce.presentation.navigation
 
 
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
@@ -23,13 +30,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.luqtaecommerce.domain.model.Category
 import com.example.luqtaecommerce.presentation.main.CustomBottomNavItem
 import com.example.luqtaecommerce.presentation.main.cart.CartScreen
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesScreen
+import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
 import com.example.luqtaecommerce.presentation.main.home.HomeScreen
+import com.example.luqtaecommerce.presentation.main.products.ProductsScreen
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
 import com.example.luqtaecommerce.presentation.main.watchlist.WatchlistScreen
 import com.example.luqtaecommerce.ui.theme.LightPrimary
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen() {
@@ -65,7 +76,12 @@ fun MainScreen() {
                     }
             ) {
                 bottomNavItems.forEach { item ->
-                    val isSelected = currentRoute == item.route
+                    //val isSelected = currentRoute == item.route
+                    val isSelected = when {
+                        currentRoute == item.route -> true
+                        currentRoute?.startsWith(Screen.Products.route) == true && item.route == Screen.Categories.route -> true
+                        else -> false
+                    }
                     CustomBottomNavItem(
                         item = item,
                         isSelected = isSelected,
@@ -87,7 +103,9 @@ fun MainScreen() {
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(Color.White)
         ) {
 
             screenOrder.forEach { route ->
@@ -143,6 +161,57 @@ fun MainScreen() {
                     }
                 }
             }
+
+            composable(
+                route = Screen.Products.route + "/{categorySlug}/{categoryName}",
+                enterTransition = {
+                    val from = previousRoute
+                    if (from == Screen.Categories.route) {
+                        fadeIn(animationSpec = tween(600)) + scaleIn(
+                            initialScale = 0.95f,
+                            animationSpec = tween(600)
+                        )
+                    } else null
+                },
+                exitTransition = {
+                    val to = navController.currentBackStackEntry?.destination?.route ?: ""
+                    if (to == Screen.Categories.route) {
+                        fadeOut(animationSpec = tween(300)) + scaleOut(
+                            targetScale = 0.95f,
+                            animationSpec = tween(300)
+                        )
+                    } else null
+                },
+                popEnterTransition = {
+                    val from = previousRoute
+                    if (from == Screen.Categories.route) {
+                        fadeIn(animationSpec = tween(300)) + scaleIn(
+                            initialScale = 0.95f,
+                            animationSpec = tween(300)
+                        )
+                    } else null
+                },
+                popExitTransition = {
+                    val to = navController.currentBackStackEntry?.destination?.route ?: ""
+                    if (to == Screen.Categories.route) {
+                        fadeOut(animationSpec = tween(300)) + scaleOut(
+                            targetScale = 0.95f,
+                            animationSpec = tween(300)
+                        )
+                    } else null
+                }
+            ) { backStackEntry ->
+                val categorySlug = backStackEntry.arguments?.getString("categorySlug")
+                val categoryName = backStackEntry.arguments?.getString("categoryName")
+                LaunchedEffect(Unit) {
+                    previousRoute = Screen.Products.route // track correctly
+                }
+                ProductsScreen(
+                    navController = navController,
+                    categorySlug = categorySlug,
+                    categoryName = categoryName
+                )
+            }
         }
     }
 }
@@ -151,6 +220,8 @@ fun getTransitionDirection(order: List<String>, from: String, to: String): Int {
     val fromIndex = order.indexOf(from)
     val toIndex = order.indexOf(to)
     return when {
+        toIndex == -1 -> -1
+        fromIndex == -1 -> 1
         fromIndex < toIndex -> -1 // forward in list → slide left
         fromIndex > toIndex -> 1  // backward in list → slide right
         else -> 0

@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordFormState
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
-import com.example.luqtaecommerce.presentation.auth.signup.CustomButton
+import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import com.example.luqtaecommerce.ui.theme.RedFont
@@ -108,7 +108,7 @@ fun CodeVerificationStep(
                 color = PrimaryCyan
             )
         } else {
-            CustomButton(
+            LuqtaButton(
                 text = stringResource(R.string.proceed),
                 onClick = { viewModel.onVerifyCode() }
             )

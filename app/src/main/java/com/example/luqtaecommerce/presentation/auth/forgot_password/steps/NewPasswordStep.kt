@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordFormState
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
-import com.example.luqtaecommerce.presentation.auth.signup.CustomButton
-import com.example.luqtaecommerce.presentation.auth.signup.PasswordTextField
+import com.example.luqtaecommerce.ui.components.LuqtaButton
+import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import com.example.luqtaecommerce.ui.theme.RedFont
@@ -77,7 +77,7 @@ fun NewPasswordStep(
             )
         }
 
-        PasswordTextField(
+        LuqtaPasswordTextField(
             value = forgotPasswordState.password,
             onValueChange = { viewModel.onPasswordChanged(it) },
             placeholder = stringResource(R.string.enter_password),
@@ -104,7 +104,7 @@ fun NewPasswordStep(
             )
         }
 
-        PasswordTextField(
+        LuqtaPasswordTextField(
             value = forgotPasswordState.confirmPassword,
             onValueChange = { viewModel.onConfirmPasswordChanged(it) },
             placeholder = stringResource(R.string.confirm_password),
@@ -127,7 +127,7 @@ fun NewPasswordStep(
                 color = PrimaryCyan
             )
         } else {
-            CustomButton(
+            LuqtaButton(
                 text = stringResource(R.string.save),
                 onClick = { viewModel.onSavePassword() }
             )

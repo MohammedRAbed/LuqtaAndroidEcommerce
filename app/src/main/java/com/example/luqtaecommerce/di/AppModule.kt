@@ -15,6 +15,8 @@ import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswo
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
+import com.example.luqtaecommerce.presentation.main.home.HomeViewModel
+import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -27,10 +29,8 @@ import java.util.concurrent.TimeUnit
 
 val appModule = module {
     factory { ValidateFullName() }
-
     factory { ValidateEmail() }
     factory { ValidatePassword() }
-
     factory { ValidateForgotPasswordCode() }
 
     factory { ValidateLogin(get(), get()) }
@@ -42,12 +42,11 @@ val appModule = module {
         }
         OkHttpClient.Builder()
             .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(7, TimeUnit.SECONDS)
+            .readTimeout(7, TimeUnit.SECONDS)
+            .writeTimeout(7, TimeUnit.SECONDS)
             .build()
     }
-
     single {
         Retrofit.Builder()
             .baseUrl(BaseUrlProvider.getBaseUrl())
@@ -74,7 +73,8 @@ val appModule = module {
     }
 
 
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
-    // viewModel { ProductsViewModel(get(), get()) } // Add SavedStateHandle
+    viewModel { ProductsViewModel(get()) }
 
 }

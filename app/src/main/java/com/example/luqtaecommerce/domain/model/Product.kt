@@ -17,8 +17,7 @@ data class Product(
     val description: String,
     val price: String,
     val stock: Int,
-    @SerializedName("thumbnail_url")
-    val thumbnailUrl: String?,
+    val thumbnail: String?,
     @SerializedName("detail_url")
     val detailUrl: String,
     @SerializedName("category_detail")

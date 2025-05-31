@@ -8,14 +8,19 @@ import com.example.luqtaecommerce.domain.use_case.Result
 class LuqtaRepositoryImpl(
     private val api: LuqtaApi
 ) : LuqtaRepository {
+
+    private var cachedCategories: Result<List<Category>>? = null
+
     override suspend fun getCategories(): Result<List<Category>> {
-        return try {
+        return cachedCategories ?: try {
             val response = api.getCategories()
-            if (response.success) {
+            val result = if (response.success) {
                 Result.success(response.data)
             } else {
                 Result.failure(Exception(response.message))
             }
+            cachedCategories = result
+            result
         } catch (e: Exception) {
             Result.failure(e)
         }

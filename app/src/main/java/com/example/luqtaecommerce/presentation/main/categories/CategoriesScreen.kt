@@ -31,7 +31,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,11 +49,12 @@ import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.domain.model.Category
 import org.koin.androidx.compose.koinViewModel
 import com.example.luqtaecommerce.domain.use_case.Result
-import com.example.luqtaecommerce.presentation.auth.signup.CustomButton
-import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
+import com.example.luqtaecommerce.presentation.navigation.Screen
+import com.example.luqtaecommerce.ui.components.LoadErrorView
+import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -65,6 +64,7 @@ fun CategoriesScreen(
 ) {
 
     LaunchedEffect(Unit) {
+        delay(100) // Small delay to let UI settle
         viewModel.fetchCategories()
     }
 
@@ -75,29 +75,14 @@ fun CategoriesScreen(
             .fillMaxSize()
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (categoriesState is Result.Loading) Arrangement.Center else Arrangement.Top
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(horizontal = 15.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                modifier = Modifier.padding(end = 0.dp),
-                onClick = { navController.popBackStack() }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = "Back"
-                )
-            }
-            Text(
-                text = "التصنيفات",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
-            )
+            LuqtaBackHeader(title = "التصنيفات", navController = navController)
         }
 
         HorizontalDivider(color = LightPrimary, thickness = 1.dp)
@@ -123,47 +108,19 @@ fun CategoriesScreen(
                     ) {
                         items(categoriesState.data) { category ->
                             CategoryItem(category = category) {
-                                //navController.navigate("products_screen/${category.slug}")
+                                navController.navigate(
+                                    "${Screen.Products.route}/${category.slug}/${category.name}"/**/
+                                )
                             }
                         }
                     }
                 }
                 is Result.Error -> {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_error),
-                            modifier = Modifier.size(200.dp),
-                            contentDescription = "Error"
-                        )
+                    LoadErrorView { viewModel.retryFetchingCategories() }
 
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = "حدث خطأ أثناء تحميل التصنيفات.",
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 18.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Black
-                            ),
-                            onClick = { viewModel.fetchCategories() }
-                        ) {
-                            Text("إعادة المحاولة")
-                            Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Retry")
-                        }
-                    }
                     Log.e("Categories Error",
                         categoriesState.message ?: categoriesState.exception.localizedMessage
                     )
-                    //Text(text = "Error: ${categoriesState.message ?: categoriesState.exception.localizedMessage}")
                 }
             }
         }
@@ -171,10 +128,14 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryItem(category: Category, onClick: () -> Unit) {
+fun CategoryItem(
+    modifier: Modifier = Modifier,
+    category: Category,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
+            //.fillMaxWidth()
             .background(Color.White)
             .border(
                 width = 1.dp,

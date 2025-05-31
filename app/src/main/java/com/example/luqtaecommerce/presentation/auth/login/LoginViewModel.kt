@@ -58,7 +58,8 @@ class LoginViewModel(
                     // Simulate a delay for the login process
                     delay(2000)
                     // Reset loading state and indicate successful login
-                    _loginState.update { it.copy(isLoading = false, loginSuccessful = true) }
+                    _loginState.update { it.copy(loginSuccessful = true) }
+                    _loginState.update { it.copy(isLoading = false) }
                 } catch (e: Exception) {
                     _loginState.update {
                         it.copy(

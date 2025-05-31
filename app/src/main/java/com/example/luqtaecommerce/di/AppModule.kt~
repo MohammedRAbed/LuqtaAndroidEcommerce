@@ -1,7 +1,7 @@
 package com.example.luqtaecommerce.di
 
+import com.example.luqtaecommerce.data.remote.BaseUrlProvider
 import com.example.luqtaecommerce.data.remote.LuqtaApi
-import com.example.luqtaecommerce.data.remote.getBaseUrl
 import com.example.luqtaecommerce.domain.repository.LuqtaRepository
 import com.example.luqtaecommerce.domain.repository.LuqtaRepositoryImpl
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
@@ -15,6 +15,7 @@ import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswo
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
+import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -27,10 +28,8 @@ import java.util.concurrent.TimeUnit
 
 val appModule = module {
     factory { ValidateFullName() }
-
     factory { ValidateEmail() }
     factory { ValidatePassword() }
-
     factory { ValidateForgotPasswordCode() }
 
     factory { ValidateLogin(get(), get()) }
@@ -42,15 +41,14 @@ val appModule = module {
         }
         OkHttpClient.Builder()
             .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(7, TimeUnit.SECONDS)
+            .readTimeout(7, TimeUnit.SECONDS)
+            .writeTimeout(7, TimeUnit.SECONDS)
             .build()
     }
-
     single {
         Retrofit.Builder()
-            .baseUrl(getBaseUrl())
+            .baseUrl(BaseUrlProvider.getBaseUrl())
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -75,6 +73,6 @@ val appModule = module {
 
 
     viewModel { CategoriesViewModel(get()) }
-    // viewModel { ProductsViewModel(get(), get()) } // Add SavedStateHandle
+    viewModel { ProductsViewModel(get()) }
 
 }

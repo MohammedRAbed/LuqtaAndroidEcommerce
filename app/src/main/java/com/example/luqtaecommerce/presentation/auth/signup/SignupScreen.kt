@@ -28,6 +28,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
+import com.example.luqtaecommerce.ui.components.LuqtaButton
+import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
+import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LuqtaEcommerceTheme
@@ -115,7 +118,7 @@ fun SignupScreen(
             )
         }
 
-        CustomTextField(
+        LuqtaTextField(
             value = signupState.fullName,
             onValueChange = { viewModel.onFullNameChange(it) },
             placeholder = stringResource(R.string.full_name_example),
@@ -143,7 +146,7 @@ fun SignupScreen(
             )
         }
 
-        CustomTextField(
+        LuqtaTextField(
             value = signupState.email,
             onValueChange = { viewModel.onEmailChange(it) },
             placeholder = stringResource(R.string.email_example),
@@ -171,7 +174,7 @@ fun SignupScreen(
             )
         }
 
-        PasswordTextField(
+        LuqtaPasswordTextField(
             value = signupState.password,
             onValueChange = { viewModel.onPasswordChange(it) },
             placeholder = stringResource(id = R.string.enter_password),
@@ -200,7 +203,7 @@ fun SignupScreen(
             )
         }
 
-        PasswordTextField(
+        LuqtaPasswordTextField(
             value = signupState.confirmPassword,
             onValueChange = { viewModel.onConfirmPasswordChange(it) },
             placeholder = stringResource(R.string.enter_password),
@@ -222,7 +225,7 @@ fun SignupScreen(
                 color = PrimaryCyan
             )
         } else {
-            CustomButton(
+            LuqtaButton(
                 text = stringResource(R.string.add_account),
                 onClick = { viewModel.onSignup() }
             )
@@ -242,118 +245,6 @@ fun SignupScreen(
     }
 }
 
-@Composable
-fun CustomTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Done,
-    isValid: Boolean? = null,
-    errorMessage: String? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(text = placeholder, color = GrayPlaceholder, fontSize = 14.sp) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryCyan,
-            unfocusedBorderColor = when {
-                value.isEmpty() -> Color.Gray
-                isValid == true -> PrimaryCyan
-                else -> RedFont
-            },
-            cursorColor = PrimaryCyan
-        )
-    )
-
-    errorMessage?.let {
-        Text(
-            text = "* $it",
-            color = Color.Red,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun PasswordTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    passwordVisible: Boolean,
-    onTogglePasswordVisibility: () -> Unit,
-    imeAction: ImeAction = ImeAction.Done,
-    isValid: Boolean? = null,
-    errorMessage: String? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(text = placeholder, color = GrayPlaceholder, fontSize = 14.sp) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = imeAction
-        ),
-        trailingIcon = {
-            IconButton(onClick = onTogglePasswordVisibility) {
-                Icon(
-                    painter = if (passwordVisible) painterResource(id = R.drawable.visible_icon) else painterResource(id = R.drawable.hidden_icon),
-                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                )
-            }
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryCyan,
-            unfocusedBorderColor = when {
-                value.isEmpty() -> Color.Gray
-                isValid == true -> PrimaryCyan
-                else -> RedFont
-            },
-            cursorColor = PrimaryCyan
-        )
-    )
-
-    errorMessage?.let {
-        Text(
-            text = "* $it",
-            color = Color.Red,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(top = 4.dp, start = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun CustomButton(
-    text: String,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp),
-        shape = MaterialTheme.shapes.small,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black
-        )
-    ) {
-        Text(text = text)
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

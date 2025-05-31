@@ -31,18 +31,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.navigation.Screen
-import com.example.luqtaecommerce.presentation.auth.signup.CustomButton
-import com.example.luqtaecommerce.presentation.auth.signup.CustomTextField
-import com.example.luqtaecommerce.presentation.auth.signup.PasswordTextField
+import com.example.luqtaecommerce.ui.components.LuqtaButton
+import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
+import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import com.example.luqtaecommerce.ui.theme.RedFont
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -128,7 +128,7 @@ fun LoginScreen(
             )
         }
 
-        CustomTextField(
+        LuqtaTextField(
             value = loginState.email,
             onValueChange = { viewModel.onEmailChange(it) },
             placeholder = stringResource(R.string.email_example),
@@ -156,7 +156,7 @@ fun LoginScreen(
             )
         }
 
-        PasswordTextField(
+        LuqtaPasswordTextField(
             value = loginState.password,
             onValueChange = { viewModel.onPasswordChange(it) },
             placeholder = stringResource(id = R.string.enter_password),
@@ -185,7 +185,7 @@ fun LoginScreen(
             )
         }
 
-        if(loginState.isLoading) {
+        if(loginState.isLoading || loginState.loginSuccessful) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(100.dp)
@@ -194,22 +194,10 @@ fun LoginScreen(
                 color = PrimaryCyan
             )
         } else {
-            CustomButton(
+            LuqtaButton(
                 text = stringResource(R.string.login),
                 onClick = { viewModel.onLogin() }
             )
         }
-
-
-        // Show the error
-        //signupState.signupError?.let { error ->
-        Text(
-            text = "${loginState.email}\n${loginState.password}",
-            fontWeight = FontWeight.Medium,
-            color = RedFont,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        //}
-
     }
 }

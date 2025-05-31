@@ -25,7 +25,6 @@ import com.example.luqtaecommerce.ui.theme.LuqtaEcommerceTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 class MainActivity : ComponentActivity() {
 
@@ -38,7 +37,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         startKoin {
-            androidLogger(Level.ERROR)
+            androidLogger()
             androidContext(this@MainActivity)
             modules(appModule)
         }

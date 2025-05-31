@@ -87,10 +87,6 @@ dependencies {
     // Coil (for image loading)
     implementation(libs.coil.compose)
 
-    //Palette
-    implementation (libs.androidx.palette.ktx)
-
-
     // Retrofit for API calls
     implementation(libs.retrofit)
     // GSON converter for Retrofit (to parse JSON responses into Kotlin objects)

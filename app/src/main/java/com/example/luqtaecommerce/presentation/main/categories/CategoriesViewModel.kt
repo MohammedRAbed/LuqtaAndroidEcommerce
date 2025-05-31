@@ -16,11 +16,19 @@ class CategoriesViewModel(
     private val _categories = MutableStateFlow<Result<List<Category>>>(Result.Loading())
     val categories: StateFlow<Result<List<Category>>> = _categories
 
-//    init {
-//        fetchCategories()
-//    }
+    private var hasFetched = false
 
     fun fetchCategories() {
+        if (hasFetched) return
+        hasFetched = true
+        viewModelScope.launch {
+            getCategoriesUseCase().collect { result ->
+                _categories.value = result
+            }
+        }
+    }
+
+    fun retryFetchingCategories() {
         viewModelScope.launch {
             getCategoriesUseCase().collect { result ->
                 _categories.value = result

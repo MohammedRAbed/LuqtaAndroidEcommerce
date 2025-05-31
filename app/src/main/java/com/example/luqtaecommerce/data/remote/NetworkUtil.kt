@@ -6,23 +6,6 @@ import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
 
-//fun getBaseUrl(): String {
-//    if (isEmulator()) {
-//        Log.i("Running Device", "Emulator")
-//        return "http://10.0.2.2:8000/"
-//    } else {
-//        return "http://192.168.1.71:8000/"
-//    }
-//}
-//
-//fun isEmulator(): Boolean {
-//    return Build.FINGERPRINT.lowercase().contains("generic") ||
-//            Build.FINGERPRINT.lowercase().contains("emulator") ||
-//            Build.MODEL.contains("Emulator") ||
-//            Build.MODEL.contains("Android SDK built for x86")
-//}
-//
-
 object NetworkUtil {
     fun isRunningOnEmulator(): Boolean {
         val fingerprint = Build.FINGERPRINT?.lowercase() ?: ""
