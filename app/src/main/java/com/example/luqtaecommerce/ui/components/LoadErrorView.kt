@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,13 +34,13 @@ fun LoadErrorView(onClick: () -> Unit) {
         Image(
             painter = painterResource(id = R.drawable.ic_error),
             modifier = Modifier.size(200.dp),
-            contentDescription = "Error"
+            contentDescription = stringResource(R.string.error)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "حدث خطأ أثناء التحميل.",
+            text = stringResource(R.string.error_occured),
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp
         )
@@ -52,8 +53,8 @@ fun LoadErrorView(onClick: () -> Unit) {
             ),
             onClick = onClick
         ) {
-            Text("إعادة المحاولة")
-            Icon(imageVector = Icons.Filled.Refresh, contentDescription = "Retry")
+            Text(stringResource(R.string.try_again))
+            Icon(imageVector = Icons.Filled.Refresh, contentDescription = stringResource(R.string.retry))
         }
     }
 }

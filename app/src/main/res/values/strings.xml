@@ -27,4 +27,8 @@
     <string name="new_password">كلمة مرور جديدة</string>
     <string name="enter_new_password">أدخل كلمة المرور الجديدة.</string>
     <string name="save">حفظ</string>
+    <string name="error">Error</string>
+    <string name="error_occured">حدث خطأ أثناء التحميل.</string>
+    <string name="try_again">إعادة المحاولة</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -65,6 +65,7 @@ fun LoginScreen(
                 launchSingleTop = true
             }
 
+            delay(2000L)
             // reset fields
             viewModel.resetLoginForm()
         }

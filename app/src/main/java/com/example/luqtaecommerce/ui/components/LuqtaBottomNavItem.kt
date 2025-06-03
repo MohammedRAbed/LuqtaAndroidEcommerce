@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.main
+package com.example.luqtaecommerce.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,7 +25,7 @@ import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 
 
 @Composable
-fun CustomBottomNavItem(
+fun LuqtaBottomNavItem(
     modifier: Modifier,
     item: BottomNavItem,
     isSelected: Boolean,
@@ -63,6 +63,6 @@ fun CustomBottomNavItem(
 
 @Preview
 @Composable
-private fun CustomBottomNavItemPreview() {
-    CustomBottomNavItem(modifier = Modifier, item = bottomNavItems[0], isSelected = false) {}
+private fun LuqtaBottomNavItemPreview() {
+    LuqtaBottomNavItem(modifier = Modifier, item = bottomNavItems[0], isSelected = false) {}
 }

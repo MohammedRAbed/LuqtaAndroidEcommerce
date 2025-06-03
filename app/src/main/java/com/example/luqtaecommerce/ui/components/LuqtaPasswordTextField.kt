@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
+import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import com.example.luqtaecommerce.ui.theme.RedFont
 
@@ -58,7 +59,7 @@ fun LuqtaPasswordTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = PrimaryCyan,
             unfocusedBorderColor = when {
-                value.isEmpty() -> Color.Gray
+                value.isEmpty() -> LightPrimary
                 isValid == true -> PrimaryCyan
                 else -> RedFont
             },

@@ -90,6 +90,8 @@ dependencies {
     //Palette
     implementation (libs.androidx.palette.ktx)
 
+    // Swipe Refresh
+    implementation(libs.accompanist.swiperefresh)
 
     // Retrofit for API calls
     implementation(libs.retrofit)

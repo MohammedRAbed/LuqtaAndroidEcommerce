@@ -2,6 +2,7 @@ package com.example.luqtaecommerce.domain.repository
 
 import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.model.Category
+import com.example.luqtaecommerce.domain.model.Meta
 import com.example.luqtaecommerce.domain.model.Product
 import com.example.luqtaecommerce.domain.use_case.Result
 
@@ -26,15 +27,19 @@ class LuqtaRepositoryImpl(
         }
     }
 
-    override suspend fun getProducts(categorySlug: String?): Result<List<Product>> {
+    override suspend fun getProducts(
+        categorySlug: String?,
+        page: Int?,
+        pageSize: Int?
+    ): Result<Pair<List<Product>, Meta>> {
         return try {
             val response = if (categorySlug != null) {
-                api.getProductsByCategory(categorySlug)
+                api.getProductsByCategory(categorySlug, page, pageSize)
             } else {
-                api.getProducts()
+                api.getProducts(page, pageSize)
             }
             if (response.success) {
-                Result.success(response.data)
+                Result.success(Pair(response.data, response.meta))
             } else {
                 Result.failure(Exception(response.message))
             }

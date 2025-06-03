@@ -34,12 +34,9 @@ class ProductsViewModel(
 
     fun refreshProducts(categorySlug: String? = null) {
         // Prevent multiple refresh operations if one is already in progress
-        Log.i("isRefreshing", "Before: ${_uiState.value.isRefreshing}")
         if (_uiState.value.isRefreshing) return
 
         _uiState.value = _uiState.value.copy(isRefreshing = true, error = null)
-        Log.i("isRefreshing", "After: ${_uiState.value.isRefreshing}")
-
         // Reset pagination for refresh
         currentPage = 1
         hasMorePages = true

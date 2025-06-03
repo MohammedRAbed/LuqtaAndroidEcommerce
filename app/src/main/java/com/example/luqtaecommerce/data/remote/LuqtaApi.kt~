@@ -16,14 +16,9 @@ interface LuqtaApi {
 
     @GET("api/v1/products/")
     suspend fun getProducts(
-        @Query("page") page: Int? = null,
-        @Query("page_size") pageSize: Int? = null
+        @Query("page")
     ): ProductResponse
 
     @GET("api/v1/products/")
-    suspend fun getProductsByCategory(
-        @Query("category") categorySlug: String,
-        @Query("page") page: Int? = null,
-        @Query("page_size") pageSize: Int? = null
-    ): ProductResponse
+    suspend fun getProductsByCategory(@Query("category") categorySlug: String): ProductResponse
 }

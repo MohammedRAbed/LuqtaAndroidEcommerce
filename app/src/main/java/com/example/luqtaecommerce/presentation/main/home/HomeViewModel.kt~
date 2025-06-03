@@ -8,20 +8,64 @@ import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+
+data class HomeUiState(
+    val categories: Result<List<Category>> = Result.Loading(),
+    val latestProducts: Result<List<Product>> = Result.Loading(),
+    val isRefreshing: Boolean = false // State for pull-to-refresh
+)
 
 class HomeViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getProductsUseCase: GetProductsUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _categories = MutableStateFlow<Result<List<Category>>>(Result.Loading())
     private val _latestProducts = MutableStateFlow<Result<List<Product>>>(Result.Loading())
+    private val _isRefreshing = MutableStateFlow(false) // State for pull-to-refresh
 
-    val categories: StateFlow<Result<List<Category>>> = _categories
-    val latestProducts: StateFlow<Result<List<Product>>> = _latestProducts
+    val uiState: StateFlow<HomeUiState> = combine(
+        _categories,
+        _latestProducts,
+        _isRefreshing
+    ) { categories, latestProducts, isRefreshing ->
+        HomeUiState(categories, latestProducts, isRefreshing)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeUiState()
+    )
 
-    private fun getPreviewCategories() {
+    fun refreshAll() {
+        if (_isRefreshing.value) return // Prevent multiple refreshes
+
+        _isRefreshing.value = true
+        viewModelScope.launch {
+            // Trigger both fetches. Reset refreshing after both are done.
+            val categoriesDeferred = launch { fetchPreviewCategories(isRefresh = true) }
+            val productsDeferred = launch { fetchLatestProducts(isRefresh = true) }
+
+            categoriesDeferred.join() // Wait for categories to complete
+            productsDeferred.join()   // Wait for products to complete
+
+            _isRefreshing.value = false // Reset refreshing state
+        }
+    }
+
+
+    fun fetchPreviewCategories(isRefresh: Boolean = false) {
+        if (
+            _categories.value !is Result.Loading &&
+            _categories.value !is Result.Error ||
+            isRefresh
+        ) {
+            // Already loaded successfully; skip re-fetching
+            return
+        }
         viewModelScope.launch {
             getCategoriesUseCase().collect { result ->
                 _categories.value = when (result) {
@@ -32,12 +76,32 @@ class HomeViewModel(
         }
     }
 
-    private fun getLatestProducts() {
+    fun fetchLatestProducts(isRefresh: Boolean = false) {
+        if (
+            _latestProducts.value !is Result.Loading &&
+            _latestProducts.value !is Result.Error ||
+            isRefresh
+        ) {
+            // Already loaded successfully; skip re-fetching
+            return
+        }
         viewModelScope.launch {
-            getProductsUseCase().collect { result ->
-                _latestProducts.value = when (result) {
-                    is Result.Success -> Result.Success(result.data.take(6))
-                    else -> result
+            getProductsUseCase().collect { resultOfPair -> // Renamed parameter to avoid confusion
+                _latestProducts.value = when (resultOfPair) {
+                    is Result.Success -> {
+                        // Extract the List<Product> from the Pair
+                        Result.success(resultOfPair.data.first)
+                    }
+
+                    is Result.Loading -> {
+                        // Cast the Loading state to the expected type
+                        Result.Loading() // Or just Result.loading()
+                    }
+
+                    is Result.Error -> {
+                        // Cast the Error state to the expected type
+                        Result.failure(resultOfPair.exception, resultOfPair.message)
+                    }
                 }
             }
         }

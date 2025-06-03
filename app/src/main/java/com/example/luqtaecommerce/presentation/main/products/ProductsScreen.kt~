@@ -84,7 +84,7 @@ fun ProductsScreen(
             val totalItemsCount = listState.layoutInfo.totalItemsCount
 
             // Trigger load more when user is 5 items away from the end
-            lastVisibleItemIndex != null && lastVisibleItemIndex >= totalItemsCount - 2 && totalItemsCount > 0
+            lastVisibleItemIndex != null && lastVisibleItemIndex >= totalItemsCount - 5 && totalItemsCount > 0
         }
     }
 
@@ -179,8 +179,7 @@ fun ProductsScreen(
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(20.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.fillMaxSize(),
-                        state = listState
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         items(productsUiState.products) { product ->
                             ProductItem(product = product)

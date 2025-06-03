@@ -165,9 +165,8 @@ fun MainScreen() {
 
             productsComposable(
                 route = Screen.Products.route + "/{categorySlug}/{categoryName}",
-                argumentKeys = listOf("categorySlug", "categoryName"),
-                previousRoute = previousRoute,
-                navController = navController
+                navController = navController,
+                argumentKeys = listOf("categorySlug", "categoryName")
             ) { backStackEntry ->
                 val categorySlug = backStackEntry.arguments?.getString("categorySlug")
                 val categoryName = backStackEntry.arguments?.getString("categoryName")
@@ -178,19 +177,6 @@ fun MainScreen() {
                     navController = navController,
                     categorySlug = categorySlug,
                     categoryName = categoryName
-                )
-            }
-
-            productsComposable(
-                route = Screen.Products.route,
-                previousRoute = previousRoute,
-                navController = navController
-            ) {
-                LaunchedEffect(Unit) {
-                    previousRoute = Screen.Products.route // track correctly
-                }
-                ProductsScreen(
-                    navController = navController
                 )
             }
         }
