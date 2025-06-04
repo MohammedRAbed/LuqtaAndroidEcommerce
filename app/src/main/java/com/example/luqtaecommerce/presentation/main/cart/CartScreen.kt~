@@ -38,7 +38,7 @@ fun CartScreen(navController: NavController) {
     ) {
         EmptyContentView(
             navController = navController,
-            image = R.drawable.ic_empty_cart,
+            image = R.drawable.empty_cart,
             title = "سلة المشتريات فارغة",
             description = "يبدو أنك لم تضف منتجات إلى سلة التسوق الخاصة بك، بإمكانك مواصلة التسوق وتصفح المنتجات"
         )

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -87,7 +88,7 @@ fun HomeScreen(
         ) {
 
             // Welcome Header
-            WelcomeHeader()
+            WelcomeHeader(navController)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -112,7 +113,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            when(categoriesState) {
+            when (categoriesState) {
                 is Result.Success -> {
                     val categoryList = categoriesState.data
                     CategoriesRow(categoryList) { slug, name ->
@@ -146,7 +147,7 @@ fun HomeScreen(
                             ),
                             onClick = { viewModel.fetchPreviewCategories() }
                         ) {
-                            Text("إعادة المحاولة")
+                            Text("إعادة التحميل")
                             androidx.compose.material3.Icon(
                                 imageVector = Icons.Filled.Refresh,
                                 contentDescription = "Retry"
@@ -185,7 +186,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            when(latestProductsState) {
+            when (latestProductsState) {
                 is Result.Success -> {
                     val productsGrid = latestProductsState.data.chunked(2)
                     ProductsGrid(productsGrid) {}
@@ -215,7 +216,7 @@ fun HomeScreen(
                             ),
                             onClick = { viewModel.fetchLatestProducts() }
                         ) {
-                            Text("إعادة المحاولة")
+                            Text("إعادة التحميل")
                             androidx.compose.material3.Icon(
                                 imageVector = Icons.Filled.Refresh,
                                 contentDescription = "Retry"
@@ -268,7 +269,7 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun WelcomeHeader() {
+private fun WelcomeHeader(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -276,30 +277,65 @@ private fun WelcomeHeader() {
             containerColor = Color(0xFF8DDDCF)
         )
     ) {
-        Row(
+
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.Center
         ) {
-            Column {
+            Row(
+                modifier = Modifier.padding(bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "سلام محمد!",
+                    text = "سلام محمد! ",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "يلا نبلّش تسوق؟",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "يلا ندوّر على ",
+                    fontSize = 18.sp,
+                )
+                Text(
+                    text = "لقطة",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "؟",
+                    fontSize = 18.sp,
                 )
             }
-            Image(
-                painter = painterResource(id = R.drawable.waving),
-                modifier = Modifier.size(45.dp),
-                contentDescription = "Hi"
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { navController.navigate(Screen.Categories.route) },
+                    modifier = Modifier,
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black
+                    )
+                ) {
+                    Text(
+                        text = "ابدأ التسوق",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                    )
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.waving),
+                    modifier = Modifier.size(70.dp),
+                    contentDescription = "Hi"
+                )
+            }
         }
+
     }
 }
 

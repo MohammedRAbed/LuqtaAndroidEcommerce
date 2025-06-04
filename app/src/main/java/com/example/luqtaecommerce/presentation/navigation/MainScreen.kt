@@ -156,8 +156,8 @@ fun MainScreen() {
                     when (route) {
                         Screen.Home.route -> HomeScreen(navController)
                         Screen.Categories.route -> CategoriesScreen(navController)
-                        Screen.Cart.route -> CartScreen()
-                        Screen.Watchlist.route -> WatchlistScreen()
+                        Screen.Cart.route -> CartScreen(navController)
+                        Screen.Watchlist.route -> WatchlistScreen(navController)
                         Screen.Profile.route -> ProfileScreen()
                     }
                 }

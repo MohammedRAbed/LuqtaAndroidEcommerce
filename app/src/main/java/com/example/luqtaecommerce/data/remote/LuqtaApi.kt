@@ -11,9 +11,6 @@ interface LuqtaApi {
     @GET("api/v1/categories/")
     suspend fun getCategories(): CategoryResponse
 
-    @GET("api/v1/categories/{slug}/")
-    suspend fun getCategoryBySlug(@Path("slug") slug: String): CategoryResponse
-
     @GET("api/v1/products/")
     suspend fun getProducts(
         @Query("page") page: Int? = null,
