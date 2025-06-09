@@ -53,6 +53,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.presentation.navigation.Screen
 import org.koin.androidx.compose.koinViewModel
 import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
 import com.example.luqtaecommerce.ui.components.LoadErrorView
@@ -183,7 +184,11 @@ fun ProductsScreen(
                         state = listState
                     ) {
                         items(productsUiState.products) { product ->
-                            ProductItem(product = product)
+                            ProductItem(product = product) {
+                                navController.navigate(
+                                    "${Screen.ProductDetails.route}/${product.slug}"
+                                )
+                            }
                         }
 
                         item (span = { GridItemSpan(maxLineSpan) }) {
@@ -221,7 +226,8 @@ fun ProductsScreen(
 @Composable
 fun ProductItem(
     modifier: Modifier = Modifier,
-    product: Product
+    product: Product,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -230,7 +236,7 @@ fun ProductItem(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null, // This is the key: disables ripple and other indications
-                onClick = {}
+                onClick = onClick
             ),
         elevation = CardDefaults.cardElevation(),
         shape = RoundedCornerShape(topEnd = 24.dp, topStart = 24.dp)
@@ -285,7 +291,7 @@ fun ProductItem(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    FavouriteToggleIcon()
+                    FavouriteToggleIcon(size = 12.dp)
                 }
 
             }

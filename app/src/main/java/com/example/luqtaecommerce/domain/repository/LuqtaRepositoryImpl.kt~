@@ -4,7 +4,6 @@ import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.model.Category
 import com.example.luqtaecommerce.domain.model.Meta
 import com.example.luqtaecommerce.domain.model.Product
-import com.example.luqtaecommerce.domain.model.ProductDetails
 import com.example.luqtaecommerce.domain.use_case.Result
 
 class LuqtaRepositoryImpl(
@@ -49,16 +48,7 @@ class LuqtaRepositoryImpl(
         }
     }
 
-    override suspend fun getProductDetails(slug: String): Result<ProductDetails> {
-        return try {
-            val response = api.getProductDetails(slug)
-            if (response.success) {
-                Result.success(response.data)
-            } else {
-                Result.failure(Exception(response.message))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getProductDetails(slug: String): Result<Product> {
+        
     }
 }

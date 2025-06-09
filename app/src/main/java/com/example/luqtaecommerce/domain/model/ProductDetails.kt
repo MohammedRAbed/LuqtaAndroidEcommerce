@@ -2,14 +2,13 @@ package com.example.luqtaecommerce.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ProductCatalogResponse(
+data class ProductDetailsResponse(
     val success: Boolean,
     val message: String,
-    val data: List<Product>,
-    val meta: Meta
+    val data: ProductDetails
 )
 
-data class Product(
+data class ProductDetails(
     @SerializedName("product_id")
     val productId: String,
     val name: String,
@@ -23,5 +22,8 @@ data class Product(
     @SerializedName("category_detail")
     val categoryDetail: CategoryDetail,
     val tags: List<String>,
-    val rating: Rating
+    val rating: Rating,
+    @SerializedName("recommended_products")
+    val recommendedProducts: List<Product> = emptyList(),
+    val reviews: List<Review> = emptyList()
 )

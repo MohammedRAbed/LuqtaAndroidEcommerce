@@ -5,6 +5,7 @@ import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.repository.LuqtaRepository
 import com.example.luqtaecommerce.domain.repository.LuqtaRepositoryImpl
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
+import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
 import com.example.luqtaecommerce.domain.use_case.validation.login.ValidateLogin
 import com.example.luqtaecommerce.domain.use_case.validation.common.ValidateEmail
@@ -14,8 +15,10 @@ import com.example.luqtaecommerce.domain.use_case.validation.forgot_password.Val
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
+import com.example.luqtaecommerce.presentation.main.MainViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
 import com.example.luqtaecommerce.presentation.main.home.HomeViewModel
+import com.example.luqtaecommerce.presentation.main.products.ProductDetailsViewModel
 import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -60,7 +63,7 @@ val appModule = module {
 
     single { GetCategoriesUseCase(get()) }
     single { GetProductsUseCase(get()) }
-
+    single { GetProductDetailsUseCase(get()) }
 
     viewModel {
         SignupViewModel(get(), get(), get())
@@ -76,5 +79,6 @@ val appModule = module {
     viewModel { HomeViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { ProductsViewModel(get()) }
+    viewModel { ProductDetailsViewModel(get()) }
 
 }

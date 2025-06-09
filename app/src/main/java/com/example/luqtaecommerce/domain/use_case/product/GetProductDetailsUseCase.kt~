@@ -1,19 +1,18 @@
 package com.example.luqtaecommerce.domain.use_case.product
 
 import com.example.luqtaecommerce.domain.model.Category
+import com.example.luqtaecommerce.domain.model.ProductDetails
 import com.example.luqtaecommerce.domain.repository.LuqtaRepository
 import com.example.luqtaecommerce.domain.use_case.Result
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetCategoriesUseCase(
-    private val repository: LuqtaRepository
+class GetProductDetailsUseCase(
+    private val repository: LuqtaRepository,
 ) {
-    operator fun invoke(): Flow<Result<List<Category>>> = flow {
+    operator fun invoke(slug: String): Flow<Result<ProductDetails>> = flow {
         emit(Result.loading()) // Optional: for UI loading states
-        delay(350) // to validate loading
-        val result = repository.getCategories()
+        val result = repository.getProductDetails(slug)
         emit(result)
     }
 }

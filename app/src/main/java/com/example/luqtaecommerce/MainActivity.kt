@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         // handle status bar ( white bg, black items (battery, wifi, etc.) )
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
-        window.statusBarColor = Color.parseColor("#FFFFFFFF")
+        window.statusBarColor = Color.TRANSPARENT
         windowInsetsController.isAppearanceLightStatusBars = true
 
         setContent {

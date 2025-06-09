@@ -1,7 +1,9 @@
 package com.example.luqtaecommerce.data.remote
 
 import com.example.luqtaecommerce.domain.model.CategoryResponse
-import com.example.luqtaecommerce.domain.model.ProductResponse
+import com.example.luqtaecommerce.domain.model.ProductCatalogResponse
+import com.example.luqtaecommerce.domain.model.ProductDetails
+import com.example.luqtaecommerce.domain.model.ProductDetailsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -15,12 +17,17 @@ interface LuqtaApi {
     suspend fun getProducts(
         @Query("page") page: Int? = null,
         @Query("page_size") pageSize: Int? = null
-    ): ProductResponse
+    ): ProductCatalogResponse
 
     @GET("api/v1/products/")
     suspend fun getProductsByCategory(
         @Query("category") categorySlug: String,
         @Query("page") page: Int? = null,
         @Query("page_size") pageSize: Int? = null
-    ): ProductResponse
+    ): ProductCatalogResponse
+
+    @GET("api/v1/products/{slug}/")
+    suspend fun getProductDetails(
+        @Path("slug") slug: String
+    ): ProductDetailsResponse
 }

@@ -229,6 +229,7 @@ fun NavGraphBuilder.mainComposable(
         enterTransition = {
             val toRoute = route
             val direction = getTransitionDirection(screenOrder, previousRoute, toRoute)
+            Log.i("PREVIOUS", "previousRoute: $previousRoute, toRoute: $toRoute, direction: $direction")
             if (previousRoute.contains(Screen.ProductDetails.route)) {
                 fadeIn()
             } else {

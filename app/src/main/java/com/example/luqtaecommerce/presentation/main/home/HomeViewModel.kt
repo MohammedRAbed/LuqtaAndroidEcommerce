@@ -25,6 +25,14 @@ class HomeViewModel(
     val categories: StateFlow<Result<List<Category>>> = _categories
     val latestProducts: StateFlow<Result<List<Product>>> = _latestProducts
 
+    private var hasFetchedPreviewCategories = false
+    private var hasFetchedLatestProducts = false
+
+    fun initialFetchPreviewCategories() {
+        if (hasFetchedPreviewCategories) return
+        hasFetchedPreviewCategories = true
+        fetchPreviewCategories()
+    }
 
     fun fetchPreviewCategories() {
         if (
@@ -43,6 +51,14 @@ class HomeViewModel(
             }
         }
     }
+
+
+    fun initialFetchLatestProducts() {
+        if (hasFetchedLatestProducts) return
+        hasFetchedLatestProducts = true
+        fetchLatestProducts()
+    }
+
 
     fun fetchLatestProducts() {
         if (
