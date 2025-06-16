@@ -80,7 +80,7 @@ dependencies {
     // Koin
     implementation (libs.insert.koin.koin.android)
     implementation (libs.koin.androidx.compose) // for Compose
-
+    implementation(libs.koin.androidx.compose.navigation)
     // Bottom Navigation
     implementation (libs.material3)
 

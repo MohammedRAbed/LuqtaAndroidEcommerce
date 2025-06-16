@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun LuqtaButton(
     text: String,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
@@ -26,7 +27,8 @@ fun LuqtaButton(
         shape = MaterialTheme.shapes.small,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             text = text,

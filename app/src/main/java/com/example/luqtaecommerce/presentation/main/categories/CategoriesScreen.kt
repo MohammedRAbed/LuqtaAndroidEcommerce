@@ -64,7 +64,7 @@ fun CategoriesScreen(
 ) {
 
     LaunchedEffect(Unit) {
-        delay(100) // Small delay to let UI settle
+        //delay(100) // Small delay to let UI settle
         viewModel.fetchCategories()
     }
 

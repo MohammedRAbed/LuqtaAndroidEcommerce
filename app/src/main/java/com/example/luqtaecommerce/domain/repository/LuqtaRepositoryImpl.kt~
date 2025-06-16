@@ -4,6 +4,7 @@ import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.model.Category
 import com.example.luqtaecommerce.domain.model.Meta
 import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.domain.model.ProductDetails
 import com.example.luqtaecommerce.domain.use_case.Result
 
 class LuqtaRepositoryImpl(
@@ -29,15 +30,16 @@ class LuqtaRepositoryImpl(
 
     override suspend fun getProducts(
         categorySlug: String?,
+        searchQuery: String?,
         page: Int?,
         pageSize: Int?
     ): Result<Pair<List<Product>, Meta>> {
         return try {
-            val response = if (categorySlug != null) {
-                api.getProductsByCategory(categorySlug, page, pageSize)
-            } else {
-                api.getProducts(page, pageSize)
-            }
+            val response =// if (categorySlug != null) {
+              //  api.getProductsByCategory(categorySlug, page, pageSize)
+           // } else {
+                api.getProducts(categorySlug, page, pageSize)
+            //}
             if (response.success) {
                 Result.success(Pair(response.data, response.meta))
             } else {
@@ -48,7 +50,16 @@ class LuqtaRepositoryImpl(
         }
     }
 
-    override suspend fun getProductDetails(slug: String): Result<Product> {
-        
+    override suspend fun getProductDetails(slug: String): Result<ProductDetails> {
+        return try {
+            val response = api.getProductDetails(slug)
+            if (response.success) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

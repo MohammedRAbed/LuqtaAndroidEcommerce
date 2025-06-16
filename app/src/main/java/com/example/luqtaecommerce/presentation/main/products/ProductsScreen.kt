@@ -61,6 +61,7 @@ import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import org.koin.androidx.compose.navigation.koinNavViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +69,19 @@ fun ProductsScreen(
     navController: NavController,
     categorySlug: String? = null,
     categoryName: String? = null,
-    viewModel: ProductsViewModel = koinViewModel()
+    viewModel: ProductsViewModel// = koinNavViewModel()
 ) {
+
+    // This LaunchedEffect listens for the result from ProductSearchScreen
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    LaunchedEffect(savedStateHandle) {
+        savedStateHandle?.getLiveData<String>("search_query")?.observe(navController.currentBackStackEntry!!) { query ->
+            if (query != null) {
+                viewModel.applySearch(query = query)
+                savedStateHandle.remove<String>("search_query")
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.initialFetch(categorySlug)
@@ -84,7 +96,7 @@ fun ProductsScreen(
             val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
             val totalItemsCount = listState.layoutInfo.totalItemsCount
 
-            // Trigger load more when user is 5 items away from the end
+            // Trigger load more when user is 2 items away from the end
             lastVisibleItemIndex != null && lastVisibleItemIndex >= totalItemsCount - 2 && totalItemsCount > 0
         }
     }
@@ -92,7 +104,7 @@ fun ProductsScreen(
     LaunchedEffect(shouldLoadMore) {
         if (shouldLoadMore && !productsUiState.isLoading && productsUiState.pagination?.next != null) {
             Log.d("InfiniteScroll", "Attempting to load next page")
-            viewModel.loadNextPage(categorySlug)
+            viewModel.loadNextPage()
         }
     }
 
@@ -110,7 +122,17 @@ fun ProductsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             LuqtaBackHeader(
-                title = if (categorySlug != null) "$categoryName" else "المنتجات",
+                title = when {
+                    !productsUiState.searchQuery.isNullOrBlank() -> {
+                        val len = productsUiState.searchQuery.length
+                        if(len > 10)
+                            "نتائج البحث:  \"${productsUiState.searchQuery.dropLast(len-14)}\"..."
+                        else
+                            "نتائج البحث:  \"${productsUiState.searchQuery}\""
+                    }
+                    categorySlug != null -> "$categoryName"
+                    else -> "المنتجات"
+                },
                 navController = navController
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -129,7 +151,7 @@ fun ProductsScreen(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 IconButton(
-                    onClick = { }
+                    onClick = { navController.navigate(Screen.ProductsSearch.route) }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
@@ -143,7 +165,7 @@ fun ProductsScreen(
 
         PullToRefreshBox(
             isRefreshing = productsUiState.isRefreshing,
-            onRefresh = { viewModel.refreshProducts(categorySlug) }
+            onRefresh = { viewModel.refreshProducts() }
         ) {
             Column(
                 modifier = Modifier
@@ -168,7 +190,11 @@ fun ProductsScreen(
                     Log.e("ProductsScreen", "Error: ${productsUiState.error}")
                 } else if (productsUiState.products.isEmpty()) {
                     Text(
-                        text = "لا يوجد منتجات لهذا التصنيف",
+                        text = if(productsUiState.searchQuery.isNullOrBlank()) {
+                            "لا يوجد منتجات لهذا التصنيف"
+                        } else {
+                            "لا يوجد نتائج للبحث"
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),

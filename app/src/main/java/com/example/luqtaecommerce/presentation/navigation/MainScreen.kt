@@ -42,10 +42,13 @@ import com.example.luqtaecommerce.presentation.main.cart.CartScreen
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesScreen
 import com.example.luqtaecommerce.presentation.main.home.HomeScreen
 import com.example.luqtaecommerce.presentation.main.products.ProductDetailsScreen
+import com.example.luqtaecommerce.presentation.main.products.ProductSearchScreen
 import com.example.luqtaecommerce.presentation.main.products.ProductsScreen
+import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
 import com.example.luqtaecommerce.presentation.main.watchlist.WatchlistScreen
 import com.example.luqtaecommerce.ui.theme.LightPrimary
+import org.koin.androidx.compose.navigation.koinNavViewModel
 
 @Composable
 fun MainScreen() {
@@ -117,6 +120,7 @@ fun MainScreen() {
         }
     ) { innerPadding ->
 
+        val productsViewModel: ProductsViewModel = koinNavViewModel()
 
         NavHost(
             navController = navController,
@@ -125,6 +129,7 @@ fun MainScreen() {
                 .padding(innerPadding)
                 .background(Color.White)
         ) {
+
             screenOrder.forEach { route ->
                 mainComposable(
                     route = route,
@@ -160,7 +165,8 @@ fun MainScreen() {
                 ProductsScreen(
                     navController = navController,
                     categorySlug = categorySlug,
-                    categoryName = categoryName
+                    categoryName = categoryName,
+                    viewModel = productsViewModel
                 )
             }
 
@@ -174,6 +180,43 @@ fun MainScreen() {
                 }
                 ProductsScreen(
                     navController = navController,
+                    viewModel = productsViewModel
+                )
+            }
+
+            composable(
+                route = Screen.ProductsSearch.route,
+                enterTransition = {
+                    slideInVertically(
+                        initialOffsetY = { it },
+                        animationSpec = tween(250)
+                    )
+                },
+                exitTransition = {
+                    slideOutVertically (
+                        targetOffsetY = { it },
+                        animationSpec = tween(250)
+                    )
+                },
+                popEnterTransition = {
+                    slideInVertically(
+                        initialOffsetY = { it },
+                        animationSpec = tween(250)
+                    )
+                },
+                popExitTransition = {
+                    slideOutVertically(
+                        targetOffsetY = { it },
+                        animationSpec = tween(250)
+                    )
+                }
+            ) {
+                LaunchedEffect(Unit) {
+                    previousRoute = Screen.ProductsSearch.route // track correctly
+                }
+                ProductSearchScreen(
+                    navController = navController,
+                    viewModel = productsViewModel
                 )
             }
 

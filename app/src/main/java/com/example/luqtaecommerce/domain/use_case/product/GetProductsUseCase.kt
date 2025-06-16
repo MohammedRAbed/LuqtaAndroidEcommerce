@@ -13,12 +13,13 @@ class GetProductsUseCase(
 ) {
     operator fun invoke(
         categorySlug: String? = null,
+        searchQuery: String? = null,
         page: Int? = null,
         pageSize: Int? = null
     ): Flow<Result<Pair<List<Product>, Meta>>> = flow {
         emit(Result.loading()) // Optional: for UI loading states
         delay(1000) // to validate loading
-        val result = repository.getProducts(categorySlug, page, pageSize)
+        val result = repository.getProducts(categorySlug, searchQuery, page, pageSize)
         emit(result)
     }
 }

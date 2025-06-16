@@ -30,15 +30,16 @@ class LuqtaRepositoryImpl(
 
     override suspend fun getProducts(
         categorySlug: String?,
+        searchQuery: String?,
         page: Int?,
         pageSize: Int?
     ): Result<Pair<List<Product>, Meta>> {
         return try {
-            val response = if (categorySlug != null) {
-                api.getProductsByCategory(categorySlug, page, pageSize)
-            } else {
-                api.getProducts(page, pageSize)
-            }
+            val response =// if (categorySlug != null) {
+              //  api.getProductsByCategory(categorySlug, page, pageSize)
+           // } else {
+                api.getProducts(categorySlug, searchQuery, page, pageSize)
+            //}
             if (response.success) {
                 Result.success(Pair(response.data, response.meta))
             } else {

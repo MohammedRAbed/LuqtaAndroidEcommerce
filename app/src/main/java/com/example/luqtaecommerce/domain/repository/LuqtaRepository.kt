@@ -11,6 +11,7 @@ interface LuqtaRepository {
 
     suspend fun getProducts(
         categorySlug: String? = null,
+        searchQuery: String? = null,
         page: Int? = null,
         pageSize: Int? = null
     ): Result<Pair<List<Product>, Meta>>

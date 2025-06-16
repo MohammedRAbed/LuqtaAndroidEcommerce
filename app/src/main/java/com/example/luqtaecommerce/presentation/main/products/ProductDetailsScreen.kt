@@ -74,7 +74,6 @@ import com.example.luqtaecommerce.domain.model.CategoryDetail
 import com.example.luqtaecommerce.domain.model.ProductDetails
 import com.example.luqtaecommerce.domain.model.Rating
 import com.example.luqtaecommerce.domain.use_case.Result
-import com.example.luqtaecommerce.presentation.main.MainViewModel
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.AddedToCartSnackBar
 import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
@@ -104,7 +103,7 @@ fun ProductDetailsScreen(
     when (val productDetailState = viewModel.productDetailsState.collectAsState().value) {
         is Result.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = PrimaryCyan)
             }
         }
 

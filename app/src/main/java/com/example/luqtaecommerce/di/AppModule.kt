@@ -15,7 +15,6 @@ import com.example.luqtaecommerce.domain.use_case.validation.forgot_password.Val
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
-import com.example.luqtaecommerce.presentation.main.MainViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
 import com.example.luqtaecommerce.presentation.main.home.HomeViewModel
 import com.example.luqtaecommerce.presentation.main.products.ProductDetailsViewModel
