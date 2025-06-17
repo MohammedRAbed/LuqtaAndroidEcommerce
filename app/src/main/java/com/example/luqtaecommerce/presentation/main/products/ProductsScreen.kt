@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,14 +31,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,8 +65,11 @@ import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.components.LuqtaButton
+import com.example.luqtaecommerce.ui.theme.GrayFont
+import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.navigation.koinNavViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +99,13 @@ fun ProductsScreen(
     val productsUiState = viewModel.uiState.collectAsState().value
     val listState = rememberLazyGridState()
 
+    // --- Bottom Sheet State Management ---
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     // Derived state to check if we should load more
     val shouldLoadMore by remember {
         derivedStateOf {
@@ -105,6 +121,28 @@ fun ProductsScreen(
         if (shouldLoadMore && !productsUiState.isLoading && productsUiState.pagination?.next != null) {
             Log.d("InfiniteScroll", "Attempting to load next page")
             viewModel.loadNextPage()
+        }
+    }
+
+
+    // Conditionally display the Bottom Sheet
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState,
+        ) {
+            SortBottomSheetContent(
+                activeSortOption = productsUiState.activeSortOption,
+                onSortOptionSelected = { selectedOption ->
+                    viewModel.applySort(selectedOption)
+                    // Hide the sheet after selection
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                }
+            )
         }
     }
 
@@ -140,7 +178,7 @@ fun ProductsScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
-                    onClick = { }
+                    onClick = { showBottomSheet = true }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_filter),
@@ -226,11 +264,7 @@ fun ProductsScreen(
                             ) {
                                 if (productsUiState.isLoading && productsUiState.pagination?.next != null) {
                                     CircularProgressIndicator(color = PrimaryCyan)
-                                } /*else if (productsUiState.pagination?.next != null) {
-                                    LuqtaButton(text = "تحميل المزيد") {
-                                        viewModel.loadNextPage(categorySlug)
-                                    }
-                                }*/ else {
+                                } else {
                                     Text(
                                         text = "لا مزيد من المنتجات",
                                         modifier = Modifier
@@ -279,6 +313,7 @@ fun ProductItem(
                 contentDescription = product.name,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(color = GrayPlaceholder)
                     .aspectRatio(1.16f),
                 contentScale = ContentScale.Crop,
                 //error = painterResource(R.drawable.sad_face)

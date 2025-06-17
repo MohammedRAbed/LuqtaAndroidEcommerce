@@ -7,6 +7,7 @@ import com.example.luqtaecommerce.domain.model.Pagination
 import com.example.luqtaecommerce.domain.model.Product
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
 import com.example.luqtaecommerce.domain.use_case.Result
+import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
@@ -22,7 +23,8 @@ data class ProductsUiState(
     val isRefreshing: Boolean = false,
     val error: String? = null,
     val searchQuery: String? = null,
-    val categorySlug: String? = null
+    val categorySlug: String? = null,
+    val activeSortOption: SortOption = SortOption.Default
 )
 
 data class SearchUiState(
@@ -59,6 +61,23 @@ class ProductsViewModel(
             }
             .launchIn(viewModelScope)
     }
+
+    /*---------------- Sort ---------------- */
+
+    fun applySort(sortOption: SortOption) {
+        // Don't re-fetch if the option hasn't changed
+        if (sortOption == _uiState.value.activeSortOption) return
+
+        currentPage = 1
+        hasMorePages = true
+        _uiState.value = _uiState.value.copy(
+            activeSortOption = sortOption,
+            products = emptyList()
+        )
+        fetchProducts()
+    }
+
+    /*---------------- Search ---------------- */
 
     private fun fetchSearchSuggestions(query: String) {
         viewModelScope.launch {
@@ -98,30 +117,15 @@ class ProductsViewModel(
         fetchProducts()
     }
 
-    fun refreshProducts() {
-        // Prevent multiple refresh operations if one is already in progress
-        Log.i("isRefreshing", "Before: ${_uiState.value.isRefreshing}")
-        if (_uiState.value.isRefreshing) return
-
-        _uiState.value = _uiState.value.copy(isRefreshing = true, error = null)
-        Log.i("isRefreshing", "After: ${_uiState.value.isRefreshing}")
-
-        // Reset pagination for refresh
-        currentPage = 1
-        hasMorePages = true
-        fetchProducts() // Call the internal fetching logic
-    }
-
+    /* ---------------- Load Products ---------------- */
 
     private fun fetchProducts(/*page: Int = 1*/) {
         if (_uiState.value.isLoading && currentPage != 1) {
-            Log.e("DEBUGGING", "page: ${currentPage}, isLoading and page!=1")
             return // Prevent duplicate loadMore
         }
         if (!hasMorePages && currentPage != 1) {
-            Log.e("DEBUGGING", "page: ${currentPage}, !hasMorePages and page!=1")
-            return
-        }// No more pages to load unless it's a refresh
+            return // No more pages to load unless it's a refresh
+        }
 
         //currentPage = page
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
@@ -130,6 +134,7 @@ class ProductsViewModel(
             getProductsUseCase(
                 categorySlug = _uiState.value.categorySlug,
                 searchQuery = _uiState.value.searchQuery,
+                ordering = _uiState.value.activeSortOption.value,
                 page = currentPage,
                 pageSize = 10
             ).collect { result -> // Fetch 10 items per page
@@ -169,6 +174,7 @@ class ProductsViewModel(
         }
     }
 
+
     // Initial fetch for the first page
     fun initialFetch(categorySlug: String?) {
         if (_uiState.value.categorySlug == categorySlug && _uiState.value.searchQuery != null) {
@@ -178,6 +184,20 @@ class ProductsViewModel(
         hasMorePages = true
         _uiState.value = ProductsUiState(categorySlug = categorySlug)
         fetchProducts()
+    }
+
+    fun refreshProducts() {
+        // Prevent multiple refresh operations if one is already in progress
+        Log.i("isRefreshing", "Before: ${_uiState.value.isRefreshing}")
+        if (_uiState.value.isRefreshing) return
+
+        _uiState.value = _uiState.value.copy(isRefreshing = true, error = null)
+        Log.i("isRefreshing", "After: ${_uiState.value.isRefreshing}")
+
+        // Reset pagination for refresh
+        currentPage = 1
+        hasMorePages = true
+        fetchProducts() // Call the internal fetching logic
     }
 
     fun loadNextPage() {

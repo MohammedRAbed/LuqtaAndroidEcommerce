@@ -110,33 +110,49 @@ fun ProductSearchScreen(
                     color = PrimaryCyan
                 )
             } else {
-                // Suggestions are now a list of Product objects
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(searchState.suggestions, key = { it.slug }) { product ->
-                        Column(
+                if (searchState.suggestions.isEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "لم يتم العثور على نتائج", // Display product name
                             modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Row(
+                                .padding(vertical = 12.dp)
+                        )
+                    }
+                } else {
+                    // Suggestions are now a list of Product objects
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(searchState.suggestions, key = { it.slug }) { product ->
+                            Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .clickable { textFieldValue = product.name },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(
-                                    text = product.name, // Display product name
+                                Row(
                                     modifier = Modifier
-                                        .padding(vertical = 12.dp)
-                                )
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_send),
-                                    contentDescription = "Send",
-                                    tint = Color.Black
-                                )
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                        .clickable { textFieldValue = product.name },
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = product.name, // Display product name
+                                        modifier = Modifier
+                                            .padding(vertical = 12.dp)
+                                    )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_send),
+                                        contentDescription = "Send",
+                                        tint = Color.Black
+                                    )
+                                }
+                                HorizontalDivider(color = GrayPlaceholder)
                             }
-                            HorizontalDivider(color = GrayPlaceholder)
                         }
                     }
                 }

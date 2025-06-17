@@ -5,6 +5,7 @@ import com.example.luqtaecommerce.domain.model.Product
 import com.example.luqtaecommerce.domain.repository.LuqtaRepository
 import kotlinx.coroutines.flow.Flow
 import com.example.luqtaecommerce.domain.use_case.Result
+import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
@@ -14,7 +15,7 @@ class GetProductsUseCase(
     operator fun invoke(
         categorySlug: String? = null,
         searchQuery: String? = null,
-        ordering: String? = null,
+        ordering: SortOption = null,
         page: Int? = null,
         pageSize: Int? = null
     ): Flow<Result<Pair<List<Product>, Meta>>> = flow {
