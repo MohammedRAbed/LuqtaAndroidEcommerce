@@ -10,7 +10,9 @@ object BaseUrlProvider {
             runBlocking {
                 when {
                     NetworkUtil.isHostReachable("192.168.1.71") -> "http://192.168.1.71:8000/"
+                    NetworkUtil.isHostReachable("192.168.1.7") -> "http://192.168.1.7:8000/"
                     NetworkUtil.isHostReachable("192.168.1.5") -> "http://192.168.1.5:8000/"
+                    NetworkUtil.isHostReachable("192.168.1.106") -> "http://192.168.1.106:8000/"
                     else -> "http://10.0.2.2:8000/"
                 }
             }

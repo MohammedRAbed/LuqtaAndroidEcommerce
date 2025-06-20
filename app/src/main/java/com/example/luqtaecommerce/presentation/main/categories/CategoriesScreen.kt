@@ -187,8 +187,8 @@ fun getEmojiForCategory(categoryName: String): String {
         "ملابس" -> "👕" // Clothes
         "إلكترونيات" -> "📱" // Electronics
         "موضة" -> "👜" // Fashion
-        "صناعي" -> "🚗" // Industrial (Car for example)
-        "ديكور المنزل" -> "🎁" // Home Decor
+        "سيارات" -> "🚗" // Industrial (Car for example)
+        "كتب" -> "📚" // Home Decor
         "صحة" -> "🩺" // Health
         "عقارات" -> "🏠" // Construction & Real Estate
         "خدمات التصنيع" -> "📏" // Fabrication Service

@@ -35,7 +35,7 @@ fun SortBottomSheetContent(
             .wrapContentHeight()
     ) {
         Text(
-            text = ":الترتيب حسب",
+            text = "الترتيب حسب",
             fontSize = 20.sp,
             fontWeight = FontWeight.Black,
             modifier = Modifier.padding(bottom = 16.dp)

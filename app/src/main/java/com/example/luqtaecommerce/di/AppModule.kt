@@ -3,7 +3,7 @@ package com.example.luqtaecommerce.di
 import com.example.luqtaecommerce.data.remote.BaseUrlProvider
 import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.repository.LuqtaRepository
-import com.example.luqtaecommerce.domain.repository.LuqtaRepositoryImpl
+import com.example.luqtaecommerce.data.repository.LuqtaRepositoryImpl
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
@@ -34,7 +34,6 @@ val appModule = module {
     factory { ValidateEmail() }
     factory { ValidatePassword() }
     factory { ValidateForgotPasswordCode() }
-
     factory { ValidateLogin(get(), get()) }
 
 
@@ -64,17 +63,9 @@ val appModule = module {
     single { GetProductsUseCase(get()) }
     single { GetProductDetailsUseCase(get()) }
 
-    viewModel {
-        SignupViewModel(get(), get(), get())
-    }
-    viewModel {
-        LoginViewModel(get(), get(), get())
-    }
-    viewModel {
-        ForgotPasswordViewModel(get(), get(), get())
-    }
-
-
+    viewModel { SignupViewModel(get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get()) }
+    viewModel { ForgotPasswordViewModel(get(), get(), get()) }
     viewModel { HomeViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { ProductsViewModel(get()) }

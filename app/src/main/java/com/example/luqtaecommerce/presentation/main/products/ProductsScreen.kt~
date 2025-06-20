@@ -142,7 +142,6 @@ fun ProductsScreen(
             //modifier = Modifier.background(Color.White),
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState,
-            containerColor = Color.White
         ) {
             SortBottomSheetContent(
                 activeSortOption = productsUiState.activeSortOption,

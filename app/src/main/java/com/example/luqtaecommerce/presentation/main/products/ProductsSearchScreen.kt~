@@ -107,14 +107,14 @@ fun ProductSearchScreen(
                     leadingIcon = {
                         IconButton(
                             modifier = Modifier
-                                .background(Color.Black, shape = CircleShape)
+                                .background(Color.Transparent, shape = CircleShape)
                                 .size(32.dp)
                                 .clip(CircleShape),
                             onClick = { navController.popBackStack() },
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.back_arrow),
-                                tint = Color.White,
+                                tint = Color.Black,
                                 modifier = Modifier.size(20.dp),
                                 contentDescription = null
                             )

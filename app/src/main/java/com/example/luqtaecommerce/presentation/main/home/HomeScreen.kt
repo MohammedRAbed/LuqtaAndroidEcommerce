@@ -48,6 +48,9 @@ import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.presentation.main.categories.CategoryItem
 import com.example.luqtaecommerce.presentation.main.products.ProductItem
 import com.example.luqtaecommerce.presentation.navigation.Screen
+import com.example.luqtaecommerce.ui.components.ShimmerCategoriesRow
+import com.example.luqtaecommerce.ui.components.ShimmerProductItem
+import com.example.luqtaecommerce.ui.components.ShimmerProductsGrid
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import kotlinx.coroutines.delay
@@ -123,14 +126,15 @@ fun HomeScreen(
                 }
 
                 is Result.Loading -> {
-                    Box(
+                    ShimmerCategoriesRow()
+                    /*Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(color = PrimaryCyan)
-                    }
+                    }*/
                 }
 
                 is Result.Error -> {
@@ -198,6 +202,21 @@ fun HomeScreen(
                 }
 
                 is Result.Loading -> {
+                    repeat(2) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 20.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            repeat(2) {
+                                Box(modifier = Modifier.weight(1f)) {
+                                    ShimmerProductItem()
+                                }
+                            }
+                        }
+                    }
+                    /*
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -206,6 +225,7 @@ fun HomeScreen(
                     ) {
                         CircularProgressIndicator(color = PrimaryCyan)
                     }
+                     */
                 }
 
                 is Result.Error -> {

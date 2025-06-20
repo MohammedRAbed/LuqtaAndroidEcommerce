@@ -51,23 +51,23 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LuqtaEcommerceTheme {
-                KoinContext {
-                    LuqtaApp()
-                }
+                LuqtaApp()
             }
         }
     }
 
     @Composable
     fun LuqtaApp() {
-        val navController = rememberNavController()
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars)
-            ) {
-                LuqtaNavGraph(navController)
+        KoinContext {
+            val navController = rememberNavController()
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                ) {
+                    LuqtaNavGraph(navController)
+                }
             }
         }
     }

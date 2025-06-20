@@ -1,10 +1,11 @@
-package com.example.luqtaecommerce.domain.repository
+package com.example.luqtaecommerce.data.repository
 
 import com.example.luqtaecommerce.data.remote.LuqtaApi
 import com.example.luqtaecommerce.domain.model.Category
 import com.example.luqtaecommerce.domain.model.Meta
 import com.example.luqtaecommerce.domain.model.Product
 import com.example.luqtaecommerce.domain.model.ProductDetails
+import com.example.luqtaecommerce.domain.repository.LuqtaRepository
 import com.example.luqtaecommerce.domain.use_case.Result
 
 class LuqtaRepositoryImpl(

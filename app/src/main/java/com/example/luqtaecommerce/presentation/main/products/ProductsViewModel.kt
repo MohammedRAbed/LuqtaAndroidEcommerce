@@ -29,7 +29,8 @@ data class ProductsUiState(
 
 data class SearchUiState(
     val suggestions: List<Product> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val hasApplied: Boolean = false
 )
 
 @Suppress("OPT_IN_USAGE")
@@ -112,10 +113,19 @@ class ProductsViewModel(
         _uiState.value = _uiState.value.copy(
             products = emptyList(),
             searchQuery = query,
+            isLoading = true
             //isRefreshing = true
         )
+        _searchUiState.value = _searchUiState.value.copy(hasApplied = true)
         fetchProducts()
     }
+
+    fun clearSearch() {
+        _searchQueryFlow.value = "" // Clear the debounce flow
+        _searchUiState.value = SearchUiState() // Clear any active search suggestions
+    }
+
+
 
     /* ---------------- Load Products ---------------- */
 
@@ -166,7 +176,7 @@ class ProductsViewModel(
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
                             isRefreshing = false,
-                            error = result.message ?: result.exception.localizedMessage
+                            error = "Loading Error: " + (result.message ?: result.exception.localizedMessage)
                         )
                     }
                 }
@@ -177,13 +187,22 @@ class ProductsViewModel(
 
     // Initial fetch for the first page
     fun initialFetch(categorySlug: String?) {
-        if (_uiState.value.categorySlug == categorySlug && _uiState.value.searchQuery != null) {
-            return
+        val shouldFetch = (_uiState.value.categorySlug != categorySlug) ||
+                (_uiState.value.categorySlug == null && categorySlug == null && _uiState.value.products.isEmpty()) ||
+                (_uiState.value.searchQuery != null)
+
+        if(shouldFetch) {
+            currentPage = 1
+            hasMorePages = true
+            _uiState.value = ProductsUiState(categorySlug = categorySlug)
+            fetchProducts()
+        } else {
+            Log.i("FOLLOWING",
+                ""+(_uiState.value.categorySlug != categorySlug) + "||"+
+                        "("+(_uiState.value.categorySlug == null && categorySlug == null)+"&&"+(_uiState.value.products.isEmpty())+") ||" +
+                        (_uiState.value.searchQuery != null)
+                )
         }
-        currentPage = 1
-        hasMorePages = true
-        _uiState.value = ProductsUiState(categorySlug = categorySlug)
-        fetchProducts()
     }
 
     fun refreshProducts() {
