@@ -85,7 +85,7 @@ Make sure to configure your backend server to handle:
 1) Clone the repo:
 
 ```bash
-git clone https://github.com/your-username/luqta-android.git
+git clone https://github.com/MohammedRAbed/LuqtaAndroidEcommerce.git
 cd LuqtaAndroidEcommerce
 ```
 2) Open in Android Studio (Arctic Fox or higher).
