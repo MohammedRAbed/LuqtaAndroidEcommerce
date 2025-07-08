@@ -1,7 +1,7 @@
 package com.example.luqtaecommerce.domain.use_case.product
 
-import com.example.luqtaecommerce.domain.model.Category
-import com.example.luqtaecommerce.domain.repository.LuqtaRepository
+import com.example.luqtaecommerce.domain.model.product.Category
+import com.example.luqtaecommerce.data.repository.LuqtaRepository
 import com.example.luqtaecommerce.domain.use_case.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

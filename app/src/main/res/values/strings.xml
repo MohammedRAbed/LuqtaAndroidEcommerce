@@ -13,7 +13,7 @@
     <string name="already_have_account">"لديك حساب مسبقا؟ "</string>
     <string name="have_no_account">"ليس لديك حساب؟ "</string>
     <string name="login_successful">تم تسجيل الدخول بنجاح ✅</string>
-    <string name="signup_successful">تم إنشاء الحساب بنجاح ✅</string>
+    <string name="signup_successful">تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب</string>
     <string name="did_you_forget_password">نسيت كلمة المرور؟</string>
     <string name="password_updated_successfully">تم تحديث كلمة المرور بنجاح ✅</string>
     <string name="change_password_title">تغيير كلمة المرور</string>
@@ -31,4 +31,26 @@
     <string name="error_occured">حدث خطأ أثناء التحميل.</string>
     <string name="try_again">إعادة المحاولة</string>
     <string name="retry">Retry</string>
+
+    <string name="profile_picture">الصورة الشخصية</string>
+    <string name="profile_picture_optional">إضافة صورة شخصية (اختياري)</string>
+    <string name="add_photo">إضافة صورة</string>
+    <string name="remove_photo">إزالة الصورة</string>
+    <string name="select_image_source">اختر مصدر الصورة</string>
+    <string name="choose_image_source_description">اختر من أين تريد إضافة الصورة</string>
+    <string name="gallery">المعرض</string>
+    <string name="camera">الكاميرا</string>
+    <string name="skip_for_now">تخطي الآن</string>
+
+    <!-- Navigation -->
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+    <string name="create_account">إنشاء الحساب</string>
+
+    <!-- Step titles -->
+    <string name="personal_information">المعلومات الشخصية</string>
+    <string name="create_password">إنشاء كلمة المرور</string>
+
+    <!-- Form fields -->
+    <string name="username">اسم المستخدم</string>
 </resources>

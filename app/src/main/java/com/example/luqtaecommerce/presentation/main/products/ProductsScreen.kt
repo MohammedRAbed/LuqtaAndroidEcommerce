@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,20 +58,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
-import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.presentation.navigation.Screen
-import org.koin.androidx.compose.koinViewModel
 import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
-import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.components.ShimmerProductsGrid
-import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.navigation.koinNavViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

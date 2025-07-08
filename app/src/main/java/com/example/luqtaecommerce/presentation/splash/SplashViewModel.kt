@@ -1,21 +1,46 @@
 package com.example.luqtaecommerce.presentation.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.example.luqtaecommerce.presentation.auth.AuthState
+import com.example.luqtaecommerce.presentation.auth.AuthStateManager
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class SplashViewModel: ViewModel() {
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading : StateFlow<Boolean> = _isLoading.asStateFlow()
+class SplashViewModel(
+    private val authStateManager: AuthStateManager
+): ViewModel() {
+    val isLoading = MutableStateFlow(true)
 
-    fun startSplashScreen() {
+    // expose AuthState and do the navigation in the screen
+    val authState = authStateManager.authState.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        AuthState.Loading
+    )
+
+
+    /*init {
+        Log.e("SplashViewModel", "init")
+        initAuthCheck()
+        isLoading.value = false
+    }*/
+
+
+    fun initAuthCheck() {
         viewModelScope.launch {
-            delay(1000)
-            _isLoading.value = false
+            try {
+                // Force auth check
+                authStateManager.checkAuthStatus()
+            } catch (e: Exception) {
+                // On error, navigate to login
+                isLoading.value = false
+            } finally {
+                isLoading.value = false
+            }
         }
     }
 }

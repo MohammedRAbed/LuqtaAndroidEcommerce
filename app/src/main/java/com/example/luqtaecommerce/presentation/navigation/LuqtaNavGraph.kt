@@ -6,18 +6,23 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.example.luqtaecommerce.presentation.auth.activation.ActivationScreen
+import com.example.luqtaecommerce.presentation.auth.activation.CheckEmailScreen
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordScreen
 import com.example.luqtaecommerce.presentation.auth.login.LoginScreen
 import com.example.luqtaecommerce.presentation.auth.signup.SignupScreen
+import com.example.luqtaecommerce.presentation.main.MainScreen
 import com.example.luqtaecommerce.presentation.splash.SplashScreen
-import com.example.luqtaecommerce.presentation.splash.SplashViewModel
 
 @Composable
 fun LuqtaNavGraph(
@@ -28,7 +33,7 @@ fun LuqtaNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = if (isPreAndroid12) Screen.Splash.route else Screen.Login.route
+        startDestination = Screen.Splash.route//if (isPreAndroid12) Screen.Splash.route else Screen.Login.route
     ) {
 
         // Only for Android < 22 (SDK < 31)
@@ -44,8 +49,7 @@ fun LuqtaNavGraph(
             popEnterTransition = null,
             popExitTransition = null
         ) {
-            val splashViewModel: SplashViewModel = viewModel()
-            SplashScreen(navController, splashViewModel)
+            SplashScreen(navController)
         }
 
         rootComposable(route = Screen.Login.route){
@@ -61,7 +65,38 @@ fun LuqtaNavGraph(
         }
 
         rootComposable(route = Screen.Main.route,) {
-            MainScreen()
+            MainScreen(navController)
+        }
+
+        rootComposable(
+            route = Screen.CheckEmail.route+ "/{email}",
+            arguments = listOf(
+                navArgument("email") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
+            CheckEmailScreen(email = email, navController = navController)
+        }
+
+        rootComposable(
+            route = Screen.Activation.route+ "/{uid}/{token}",
+            arguments = listOf(
+                navArgument("uid") { type = NavType.StringType },
+                navArgument("token") { type = NavType.StringType }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "http://127.0.0.1:8000/activate/{uid}/{token}"
+                }
+            )
+        ) { backStackEntry ->
+            val uid = backStackEntry.arguments?.getString("uid") ?: ""
+            val token = backStackEntry.arguments?.getString("token") ?: ""
+            ActivationScreen(
+                uid = uid,
+                token = token,
+                navController = navController
+            )
         }
 
 /*
@@ -81,11 +116,13 @@ fun LuqtaNavGraph(
 fun NavGraphBuilder.rootComposable(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
+    deepLinks: List<NavDeepLink> = emptyList(),
     content: @Composable() (AnimatedContentScope.(NavBackStackEntry) -> Unit)
 ) {
     composable(
         route = route,
         arguments = arguments,
+        deepLinks = deepLinks,
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { -it }, // 👉 from left

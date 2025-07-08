@@ -2,7 +2,7 @@ package com.example.luqtaecommerce.presentation.main.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.model.ProductDetails
+import com.example.luqtaecommerce.domain.model.product.ProductDetails
 import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

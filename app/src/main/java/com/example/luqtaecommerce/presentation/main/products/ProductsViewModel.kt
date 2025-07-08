@@ -3,8 +3,8 @@ package com.example.luqtaecommerce.presentation.main.products
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.model.Pagination
-import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.domain.model.product.Pagination
+import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.presentation.main.products.model.SortOption

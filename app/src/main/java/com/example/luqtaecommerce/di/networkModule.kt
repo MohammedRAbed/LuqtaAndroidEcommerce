@@ -1,5 +1,7 @@
 package com.example.luqtaecommerce.di
 
+import android.util.Log
+import com.example.luqtaecommerce.data.remote.AuthInterceptor
 import com.example.luqtaecommerce.data.remote.BaseUrlProvider
 import com.example.luqtaecommerce.data.remote.LuqtaApi
 import okhttp3.OkHttpClient
@@ -10,17 +12,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
+
+    //single { AuthInterceptor(get(), get(), get()) }
+    //single { TokenAuthenticator(get(), get()) }
+
+    single {
+        AuthInterceptor(get()) // get() will provide TokenManager
+    }
+
     single {
         val logging = HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
         OkHttpClient.Builder()
+            .addInterceptor(get<AuthInterceptor>())
+            //.authenticator(get<TokenAuthenticator>())
             .addInterceptor(logging)
             .connectTimeout(7, TimeUnit.SECONDS)
             .readTimeout(7, TimeUnit.SECONDS)
             .writeTimeout(7, TimeUnit.SECONDS)
             .build()
     }
+
     single {
         Retrofit.Builder()
             .baseUrl(BaseUrlProvider.getBaseUrl())

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,18 +17,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,22 +37,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
-import com.example.luqtaecommerce.domain.model.Category
-import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.domain.model.auth.User
+import com.example.luqtaecommerce.domain.model.product.Category
+import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.presentation.main.categories.CategoryItem
 import com.example.luqtaecommerce.presentation.main.products.ProductItem
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.ShimmerCategoriesRow
 import com.example.luqtaecommerce.ui.components.ShimmerProductItem
-import com.example.luqtaecommerce.ui.components.ShimmerProductsGrid
+import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import kotlinx.coroutines.delay
@@ -59,6 +66,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
+    currentUser: User?,
     viewModel: HomeViewModel = koinViewModel()
 ) {
 
@@ -80,7 +88,7 @@ fun HomeScreen(
             .padding(horizontal = 16.dp)
     ) {
 
-        HomeAppBar()
+        HomeAppBar(currentUser)
 
 
         Column(
@@ -90,7 +98,7 @@ fun HomeScreen(
         ) {
 
             // Welcome Header
-            WelcomeHeader(navController)
+            WelcomeHeader(currentUser, navController)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -263,25 +271,60 @@ fun HomeScreen(
 
 
 @Composable
-fun HomeAppBar(modifier: Modifier = Modifier) {
+fun HomeAppBar(currentUser: User?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 12.dp),
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "لُقطة",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        Image(
-            painter = painterResource(id = R.drawable.app_temp_logo2),
-            modifier = Modifier.size(32.dp),
-            contentDescription = "App Icon" // Provide a meaningful content description
-        )
+        Row(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "لُقطة",
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Image(
+                painter = painterResource(id = R.drawable.app_temp_logo2),
+                modifier = Modifier.size(32.dp),
+                contentDescription = "App Icon" // Provide a meaningful content description
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color.Gray.copy(alpha = 0.1f)),
+                //.clickable { imagePickerLauncher.launch("image/*") },
+            contentAlignment = Alignment.Center
+        ) {
+            if (currentUser?.profilePic != null) {
+                AsyncImage(
+                    model = currentUser.profilePic,
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = Color.Black
+                    )
+                }
+            }
+        }
     }
 
     Spacer(modifier = Modifier.height(12.dp))
@@ -294,7 +337,7 @@ fun HomeAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun WelcomeHeader(navController: NavController) {
+private fun WelcomeHeader(currentUser: User?, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -314,7 +357,7 @@ private fun WelcomeHeader(navController: NavController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "سلام محمد! ",
+                    text = "سلام " + currentUser?.lastName + "!",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )

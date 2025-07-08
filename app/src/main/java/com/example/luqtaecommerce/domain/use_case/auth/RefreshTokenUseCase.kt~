@@ -1,0 +1,31 @@
+package com.example.luqtaecommerce.domain.use_case.auth
+
+import com.example.luqtaecommerce.data.repository.LuqtaRepository
+import com.example.luqtaecommerce.domain.model.auth.User
+import com.example.luqtaecommerce.domain.use_case.Result
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+class RefreshTokenUseCase(
+    private val repository: LuqtaRepository
+) {
+    suspend operator fun invoke(): Result<User> {
+        return try {
+            repository.refreshUserData()
+        } catch (e: Exception) {
+            Result.failure(e, e.message ?: "Token refresh failed")
+        }
+    }
+}
+
+class RefreshTokenUseCase2(
+    private val repository: LuqtaRepository
+) {
+    suspend operator fun invoke(): Flow<Result<User>> = flow {
+        emit(Result.loading()) // Optional: for UI loading states
+        delay(350) // to validate loading
+        val result = repository.refreshUserData()
+        emit(result)
+    }
+}

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -99,4 +100,10 @@ dependencies {
     implementation(libs.converter.gson)
     // OkHttp logging interceptor (very useful for debugging API requests/responses)
     implementation(libs.logging.interceptor)
+
+    // Security - for encrypted shared preferences (for KeyGenParameterSpec & Cipher usage)
+    implementation(libs.androidx.security.crypto)
+    // DataStore Preferences
+    implementation(libs.androidx.datastore.preferences)
+    implementation (libs.jetbrains.kotlinx.serialization.json)
 }

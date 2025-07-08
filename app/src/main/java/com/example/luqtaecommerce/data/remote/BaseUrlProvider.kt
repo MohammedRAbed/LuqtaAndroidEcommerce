@@ -5,14 +5,11 @@ import kotlinx.coroutines.runBlocking
 object BaseUrlProvider {
     fun getBaseUrl(): String {
         return if (NetworkUtil.isRunningOnEmulator()) {
-            "http://10.0.2.2:8000/"
+            return "http://10.0.2.2:8000/"
         } else {
             runBlocking {
                 when {
-                    NetworkUtil.isHostReachable("192.168.1.71") -> "http://192.168.1.71:8000/"
-                    NetworkUtil.isHostReachable("192.168.1.7") -> "http://192.168.1.7:8000/"
-                    NetworkUtil.isHostReachable("192.168.1.5") -> "http://192.168.1.5:8000/"
-                    NetworkUtil.isHostReachable("192.168.1.106") -> "http://192.168.1.106:8000/"
+                    NetworkUtil.isHostReachable("192.168.1.110") -> "http://192.168.1.110:8000/"
                     else -> "http://10.0.2.2:8000/"
                 }
             }

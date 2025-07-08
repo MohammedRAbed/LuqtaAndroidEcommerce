@@ -1,9 +1,18 @@
 package com.example.luqtaecommerce.presentation.auth.signup
+
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
+import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
 import com.example.luqtaecommerce.ui.components.LuqtaTextField
@@ -44,17 +54,18 @@ fun SignupScreen(
     viewModel: SignupViewModel = koinViewModel()
 ) {
     val signupState by viewModel.signupState.collectAsState()
-    var passwordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     // show Toast whenever these values change (success/fail)
     LaunchedEffect(signupState.signupSuccessful) {
         if (signupState.signupSuccessful) {
-            Toast.makeText(context,
-                context.getString(R.string.signup_successful), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.signup_successful), Toast.LENGTH_SHORT
+            ).show()
 
             /* Navigate to next screen */
-            navController.popBackStack()
+            navController.navigate("${Screen.CheckEmail.route}/${signupState.email}")
 
             // reset fields
             viewModel.resetSignupForm()
@@ -102,119 +113,89 @@ fun SignupScreen(
             )
         }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.full_name),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-            )
-            Text(
-                text = "*",
-                fontWeight = FontWeight.Medium,
-                color = RedFont
-            )
+        AnimatedContent(
+            targetState = signupState.currentStep,
+            transitionSpec = {
+                if(initialState < targetState)
+                    slideInHorizontally { -it } + fadeIn() togetherWith slideOutHorizontally { it } + fadeOut()
+                else
+                    slideInHorizontally { it } + fadeIn() togetherWith slideOutHorizontally { -it } + fadeOut()
+            },
+            label = "StepTransition"
+        ) { step ->
+            when (step) {
+                1 -> StepOnePersonalFields(viewModel)
+                2 -> StepTwoPasswordFields(viewModel)
+            }
         }
 
-        LuqtaTextField(
-            value = signupState.fullName,
-            onValueChange = { viewModel.onFullNameChange(it) },
-            placeholder = stringResource(R.string.full_name_example),
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next,
-            isValid = signupState.isFullNameValid,
-            errorMessage = signupState.fullNameError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                text = stringResource(R.string.email),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-            )
-            Text(
-                text = "*",
-                fontWeight = FontWeight.Medium,
-                color = RedFont
-            )
+            if (signupState.currentStep > 1) {
+                Button(
+                    onClick = { viewModel.previousStep() },
+                    modifier = Modifier
+                        .weight(1f)
+                        .border(
+                            color = Color.LightGray,
+                            width = 1.dp,
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White
+                    ),
+                ) {
+                    Text(
+                        text = "رجوع",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(vertical = 11.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+
+            if (signupState.currentStep <= 2) {
+                if (signupState.currentStep == 2) {
+                    LuqtaButton(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.add_account),
+                        onClick = { viewModel.onSignup() },
+                        enabled = !signupState.isLoading
+                    )
+                } else {
+                    Button(
+                        onClick = { viewModel.nextStep() },
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(
+                                color = Color.LightGray,
+                                width = 1.dp,
+                                shape = RoundedCornerShape(4.dp)
+                            ),
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black
+                        ),
+                    ) {
+                        Text(
+                            text = "التالي",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(vertical = 11.dp)
+                        )
+                    }
+                }
+            }
         }
 
-        LuqtaTextField(
-            value = signupState.email,
-            onValueChange = { viewModel.onEmailChange(it) },
-            placeholder = stringResource(R.string.email_example),
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
-            isValid = signupState.isEmailValid,
-            errorMessage = signupState.emailError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.password),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-            )
-            Text(
-                text = "*",
-                fontWeight = FontWeight.Medium,
-                color = RedFont
-            )
-        }
-
-        LuqtaPasswordTextField(
-            value = signupState.password,
-            onValueChange = { viewModel.onPasswordChange(it) },
-            placeholder = stringResource(id = R.string.enter_password),
-            passwordVisible = passwordVisible,
-            onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
-            imeAction = ImeAction.Next,
-            isValid = signupState.isPasswordValid,
-            errorMessage = signupState.passwordError
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.confirm_password),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-            )
-            Text(
-                text = "*",
-                fontWeight = FontWeight.Medium,
-                color = RedFont
-            )
-        }
-
-        LuqtaPasswordTextField(
-            value = signupState.confirmPassword,
-            onValueChange = { viewModel.onConfirmPasswordChange(it) },
-            placeholder = stringResource(R.string.enter_password),
-            passwordVisible = passwordVisible,
-            onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
-            imeAction = ImeAction.Done,
-            isValid = signupState.isConfirmPasswordValid,
-            errorMessage = signupState.confirmPasswordError
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
         if(signupState.isLoading) {
             CircularProgressIndicator(
@@ -224,24 +205,7 @@ fun SignupScreen(
                     .align(Alignment.CenterHorizontally),
                 color = PrimaryCyan
             )
-        } else {
-            LuqtaButton(
-                text = stringResource(R.string.add_account),
-                onClick = { viewModel.onSignup() }
-            )
         }
-
-
-        // Show the error
-        //signupState.signupError?.let { error ->
-            Text(
-                text = "${signupState.fullName}\n${signupState.email}\n${signupState.password}\n${signupState.confirmPassword}",
-                fontWeight = FontWeight.Medium,
-                color = RedFont,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        //}
-
     }
 }
 
@@ -249,7 +213,7 @@ fun SignupScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignupScreenPreview() {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl){
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         LuqtaEcommerceTheme {
             val viewModel: SignupViewModel = viewModel()
             SignupScreen(rememberNavController(), viewModel)

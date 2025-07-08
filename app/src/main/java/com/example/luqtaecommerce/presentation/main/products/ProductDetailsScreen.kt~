@@ -1,0 +1,519 @@
+package com.example.luqtaecommerce.presentation.main.products
+
+import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import com.example.luqtaecommerce.R
+import com.example.luqtaecommerce.domain.model.CategoryDetail
+import com.example.luqtaecommerce.domain.model.ProductDetails
+import com.example.luqtaecommerce.domain.model.Rating
+import com.example.luqtaecommerce.domain.use_case.Result
+import com.example.luqtaecommerce.presentation.navigation.Screen
+import com.example.luqtaecommerce.ui.components.AddedToCartSnackBar
+import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
+import com.example.luqtaecommerce.ui.components.LoadErrorView
+import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
+import com.example.luqtaecommerce.ui.theme.LightPrimary
+import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
+
+@SuppressLint("UnrememberedGetBackStackEntry")
+@Composable
+fun ProductDetailsScreen(
+    navController: NavController,
+    slug: String,
+    viewModel: ProductDetailsViewModel = koinViewModel(),
+) {
+
+    LaunchedEffect(Unit) {
+        viewModel.getProductDetails(slug)
+    }
+
+
+    val showAddToCartMessage = viewModel.showAddToCartMessage.collectAsState().value
+
+    when (val productDetailState = viewModel.productDetailsState.collectAsState().value) {
+        is Result.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = PrimaryCyan)
+            }
+        }
+
+        is Result.Error -> {
+            LoadErrorView { viewModel.getProductDetails(slug) }
+            Log.e(
+                "Product Details Error",
+                productDetailState.message ?: productDetailState.exception.localizedMessage
+            )
+        }
+
+        is Result.Success -> {
+            ProductDetailContent(
+                navController = navController,
+                product = productDetailState.data,
+                showMessage = showAddToCartMessage,
+                onAddToCart = { viewModel.onAddToCartClicked() }
+            )
+        }
+    }
+}
+
+
+@Composable
+fun ProductDetailContent(
+    navController: NavController,
+    product: ProductDetails,
+    showMessage: Boolean = false,
+    onAddToCart: () -> Unit = {}
+) {
+    val scrollState = rememberScrollState()
+    var showFullDescription by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        // Product Image
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(Color.LightGray) // Placeholder background
+                .zIndex(0f)
+        ) {
+            if (product.thumbnail != null) {
+                AsyncImage(
+                    model = product.thumbnail
+                        ?: "https://th.bing.com/th/id/R.ed0bf03e1a684437be6d46f7d420d239?rik=j59a58Mk3c9mnw&pid=ImgRaw&r=0", // Use a placeholder if no thumbnail ,
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = showMessage,
+            enter = slideInVertically(
+                initialOffsetY = { -it }, // Start above the screen
+                animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { -it }, // Exit upward
+                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+            ),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(1f)
+        ) {
+            AddedToCartSnackBar(
+                modifier = Modifier
+                    .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+            ) {
+                navController.navigate(Screen.Cart.route) {
+                    popUpTo(Screen.Home.route)
+                    launchSingleTop = true
+                }
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(
+                modifier = Modifier
+                    .background(Color.Black, shape = CircleShape)
+                    .size(32.dp)
+                    .clip(CircleShape),
+                onClick = { navController.popBackStack() },
+                enabled = !showMessage
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back_arrow),
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = null
+                )
+            }
+            FavouriteToggleIcon(size = 20.dp)
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(1f)
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(275.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .background(Color.White)
+                    .padding(horizontal = 16.dp, vertical = 25.dp)
+            ) {
+                // Top Rated & Free Shipping
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Chip(text = "موصى به", backgroundColor = Color(0xFFE0F7FA))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Chip(text = "الحالة جيدة", backgroundColor = Color(0xFFE8F5E9))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.horizontalScroll(rememberScrollState())
+                    ) {
+                        for (tag in product.tags) {
+                            Chip(text = "#$tag", backgroundColor = LightPrimary)
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Product Name and Price
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = product.name,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "$${product.price}",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Rating
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    repeat(product.rating.average.toInt()) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_star_filled), // You'll need a filled star icon
+                            contentDescription = "Star",
+                            tint = Color(0xFFFFC107),
+                            modifier = Modifier.size(10.dp)
+                        )
+                    }
+                    if (product.rating.average % 2 != 0) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_star_half_filled), // You'll need a filled star icon
+                            contentDescription = "Star",
+                            tint = Color.Transparent,
+                            modifier = Modifier.size(10.dp)
+                        )
+                    }
+                    repeat(
+                        if (product.rating.average % 2 != 0)
+                            5 - (product.rating.average.toInt() + 1)
+                        else 5 - product.rating.average.toInt()
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_star_unfilled), // You'll need a filled star icon
+                            contentDescription = "Star",
+                            tint = Color(0xFFF4F5FD),
+                            modifier = Modifier.size(10.dp)
+                        )
+                    }
+
+                    Text(
+                        text = " ${product.rating.average}.0 (${product.rating.count} مراجعات)",
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(color = GrayPlaceholder)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(scrollState)
+                ) {
+                    // Description
+                    val words = product.description.split(" ")
+                    val displayDescription = if (words.size > 20 && !showFullDescription) {
+                        words.take(20).joinToString(" ") + "..."
+                    } else {
+                        product.description
+                    }
+                    Text(
+                        text = displayDescription,
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        lineHeight = 24.sp
+                    )
+                    if (words.size > 20 && !showFullDescription) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            TextButton(onClick = { showFullDescription = !showFullDescription }) {
+                                Text(
+                                    text = "قراءة المزيد",
+                                    color = PrimaryCyan,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+                        }
+
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Quantity Selector
+                    Text(
+                        text = "الكمية",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .border(
+                                color = LightPrimary,
+                                width = 1.dp,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    ) {
+                        var quantity by remember { mutableIntStateOf(1) }
+                        // Decrease button
+                        IconButton(
+                            onClick = { if (quantity > 1) quantity-- },
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp)),
+                            enabled = quantity>1
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.ic_minus_en
+                                ), // You'll need a minus icon
+                                contentDescription = "Decrease quantity",
+                                tint = if (quantity>1) Color.Black else GrayPlaceholder
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = quantity.toString(),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        // Increase button
+                        IconButton(
+                            onClick = { quantity++ },
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_plus_en), // You'll need a plus icon
+                                contentDescription = "Increase quantity",
+                                tint = Color.Black
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Buy Now and Add to Cart Buttons
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = { /* Handle Buy Now */ },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(50.dp)
+                                .border(
+                                    shape = RoundedCornerShape(12.dp),
+                                    width = 1.dp,
+                                    color = LightPrimary
+                                ),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text(
+                                text = "شراء الآن",
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Button(
+                            onClick = onAddToCart,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(50.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Text(
+                                text = "إضافة إلى السلة",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.shopping_cart_button),
+                                contentDescription = "Add to Cart",
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Chip(text: String, backgroundColor: Color) {
+    Surface(
+        color = backgroundColor,
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.Black
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProductDetailScreenPreview() {
+    val sampleProduct = ProductDetails(
+        productId = "1",
+        name = "حذاء مطاطي رجالي رياضي مناسب للجري",
+        slug = "loop-silicone-strong-magnetic-watch",
+        description = "ساعة لوب سيليكون المغناطيسية القوية، المصنوعة من مادة سيليكون عالية الجودة، تضمن لك راحةً وثباتًا مثاليًا على معصمك. السيليكون الناعم والمرن لطيف على البشرة، مما يجعله مثاليًا للارتداء اليومي. يوفر الإغلاق المغناطيسي القوي ثباتًا ثابتًا، مما يحافظ على ساعتك ثابتة في مكانها طوال أنشطتك. صُمم هذا السوار ليجمع بين الأناقة والعملية، وهو مثالي لأي مناسبة.",
+        price = "15.25",
+        stock = 100,
+        thumbnail = "https://th.bing.com/th/id/OIP.Vui1gAtnHmqJTYC5Xi0kMgHaFC?w=280&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        detailUrl = "https://example.com/products/loop-silicone-strong-magnetic-watch",
+        categoryDetail = CategoryDetail(name = "Smartwatches", slug = "smartwatches"),
+        tags = listOf("حذاء", "ساعة", "جوال", "راديو", "كتاب", "كنب", "كرسي", "ملابس", "أيفون"),
+        rating = Rating(average = 4, count = 2495)
+    )
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        ProductDetailContent(
+            navController = rememberNavController(),
+            product = sampleProduct,
+            showMessage = true
+        )
+    }
+}

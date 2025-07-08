@@ -1,0 +1,160 @@
+package com.example.luqtaecommerce.data.local
+
+import android.util.Base64
+import com.example.luqtaecommerce.data.remote.LuqtaApi
+import com.example.luqtaecommerce.domain.model.auth.RefreshTokenRequest
+import com.example.luqtaecommerce.domain.model.auth.User
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import org.json.JSONObject
+
+class TokenManagerImpl(private val authPreferences: AuthPreferences) {
+
+    private val refreshMutex = Mutex()
+    private val initializationLock  = Mutex()
+    @Volatile private var cachedAccessToken: String? = null
+    @Volatile private var cachedRefreshToken: String? = null
+
+    companion object {
+        private const val TOKEN_REFRESH_THRESHOLD_MINUTES = 5
+    }
+
+    private var initialized = false
+
+    suspend fun ensureInitialized() {
+        if (!initialized) {
+            initializationLock.withLock {
+                if (!initialized) {
+                    cachedAccessToken = authPreferences.getAccessToken()
+                    cachedRefreshToken = authPreferences.getRefreshToken()
+                    initialized = true
+                }
+            }
+        }
+    }
+
+    fun getCachedAccessToken(): String?  = cachedAccessToken
+
+    fun getCachedRefreshToken(): String? = cachedRefreshToken
+
+    fun isTokenExpired(token: String?): Boolean {
+        if (token == null) return true
+
+        return try {
+            val payload = getTokenPayload(token)
+            val exp = payload.getLong("exp")
+            val currentTime = System.currentTimeMillis() / 1000
+
+            exp <= currentTime
+        } catch (e: Exception) {
+            true // Consider token expired if we can't parse it
+        }
+    }
+
+    fun shouldRefreshToken(token: String?): Boolean {
+        if (token == null) return true
+
+        return try {
+            val payload = getTokenPayload(token)
+            val exp = payload.getLong("exp")
+            val currentTime = System.currentTimeMillis() / 1000
+            val refreshThreshold = TOKEN_REFRESH_THRESHOLD_MINUTES * 60
+
+            exp <= (currentTime + refreshThreshold)
+        } catch (e: Exception) {
+            true
+        }
+    }
+
+    private fun getTokenPayload(token: String): JSONObject {
+        val parts = token.split(".")
+        if (parts.size != 3) {
+            throw IllegalArgumentException("Invalid JWT token format")
+        }
+
+        val payload = parts[1]
+        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE)
+        val decodedString = String(decodedBytes)
+
+        return JSONObject(decodedString)
+    }
+
+    /*suspend fun getValidAccessToken(
+        onRefreshToken: suspend () -> AuthTokens?
+    ): String? = refreshMutex.withLock {
+        val currentToken = authPreferences.getAccessToken()
+
+        when {
+            currentToken == null -> null
+            isTokenExpired(currentToken) -> {
+                // Token is expired, try to refresh
+                val newTokens = onRefreshToken()
+                newTokens?.let {
+                    authPreferences.saveTokens(it.accessToken, it.refreshToken)
+                    it.accessToken
+                }
+            }
+            shouldRefreshToken(currentToken) -> {
+                // Token is about to expire, refresh proactively
+                val newTokens = onRefreshToken()
+                newTokens?.let {
+                    authPreferences.saveTokens(it.accessToken, it.refreshToken)
+                    it.accessToken
+                } ?: currentToken // If refresh fails, return current token
+            }
+            else -> currentToken
+        }
+    }
+    */
+
+    fun getUserFromToken(token: String): User? {
+        return try {
+            val json = getTokenPayload(token)
+            User(
+                id = json.optString("user_id"),
+                username = json.optString("username"),
+                email = json.optString("email"),
+                firstName = json.optString("first_name"),
+                lastName = json.optString("last_name"),
+                phoneNumber = json.optString("phone_number"),
+                null,
+                isActive = true
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
+    suspend fun refreshTokensIfNeeded(api: LuqtaApi): Boolean = refreshMutex.withLock {
+        //val refreshToken = authPreferences.getRefreshToken() ?: return false
+        val refreshToken = cachedRefreshToken ?: return false
+
+        val response = try {
+            api.refreshToken(RefreshTokenRequest(refreshToken))
+        } catch (e: Exception) {
+            return false
+        }
+
+        if (response.isSuccessful) {
+            val newTokens = response.body()?.data
+            if (newTokens != null) {
+                authPreferences.saveTokens(newTokens.accessToken, newTokens.refreshToken)
+                cachedAccessToken = newTokens.accessToken
+                cachedRefreshToken = newTokens.refreshToken
+                return true
+            }
+        }
+        false
+    }
+
+    fun updateAccessToken(token: String) {
+        cachedAccessToken = token
+    }
+
+    suspend fun clearTokens() {
+        cachedAccessToken = null
+        authPreferences.clearUserData()
+    }
+}

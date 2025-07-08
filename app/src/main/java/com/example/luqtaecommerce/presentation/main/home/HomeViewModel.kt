@@ -2,16 +2,13 @@ package com.example.luqtaecommerce.presentation.main.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.model.Category
-import com.example.luqtaecommerce.domain.model.Product
+import com.example.luqtaecommerce.domain.model.product.Category
+import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 

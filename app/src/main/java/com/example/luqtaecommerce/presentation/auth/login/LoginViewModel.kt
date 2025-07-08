@@ -2,7 +2,7 @@ package com.example.luqtaecommerce.presentation.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.luqtaecommerce.domain.use_case.validation.login.ValidateLogin
+import com.example.luqtaecommerce.domain.use_case.auth.LoginUseCase
 import com.example.luqtaecommerce.domain.use_case.validation.common.ValidateEmail
 import com.example.luqtaecommerce.domain.use_case.validation.common.ValidatePassword
 import kotlinx.coroutines.delay
@@ -10,11 +10,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.luqtaecommerce.domain.use_case.Result
+import com.example.luqtaecommerce.presentation.auth.AuthStateManager
 
 class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
+    private val authStateManager: AuthStateManager,
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
-    private val validateLogin: ValidateLogin
 ) : ViewModel() {
     private val _loginState = MutableStateFlow(LoginFormState())
     val loginState = _loginState.asStateFlow()
@@ -42,39 +45,59 @@ class LoginViewModel(
     }
 
     fun onLogin() {
-        val validationResult = validateLogin(_loginState.value.email, _loginState.value.password)
-        if (/*!validationResult.successful*/false) {
+        //val validationResult = validateLogin(_loginState.value.email, _loginState.value.password)
+        val isEmailValid = validateEmail(_loginState.value.email).successful
+        val isPasswordValid = validatePassword(_loginState.value.password).successful
+
+        if (!isEmailValid || !isPasswordValid /*false*/) {
             _loginState.update {
                 it.copy(
-                    loginError = "${validationResult.errorMessage} ⚠️"
+                    loginError = "البيانات المدخلة غير صالحة ⚠️"
                 )
             }
-        } else {
-            // Simulate login process (replace with actual login logic)
-            _loginState.update { it.copy(isLoading = true) }
+            return
+        }
+        _loginState.update { it.copy(isLoading = true) }
 
-            viewModelScope.launch {
-                try {
-                    // Simulate a delay for the login process
-                    delay(1000)
-                    // Reset loading state and indicate successful login
-                    _loginState.update { it.copy(loginSuccessful = true) }
-                    // Simulate a delay for the login process
-                    delay(2000)
-                    _loginState.update { it.copy(isLoading = false) }
-                } catch (e: Exception) {
-                    _loginState.update {
-                        it.copy(
-                            isLoading = false,
-                            loginError = "فشل تسجبل الدخول. يرجى المحاولة مرة أخرى 🤕"
-                        )
+        viewModelScope.launch {
+            try {
+                val state = _loginState.value
+                val email = state.email
+                val password = state.password
+                loginUseCase(email, password).also { result ->
+                    when(result) {
+                        is Result.Success-> {
+                            _loginState.update { it.copy(isLoading = false, loginSuccessful = true) }
+                        }
+                        is Result.Error -> {
+                            _loginState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    loginError = "فشل تسجبل الدخول. يرجى المحاولة مرة أخرى 🤕"
+                                )
+                            }
+                        }
+                        else -> {}
                     }
+                }
+
+            } catch (e: Exception) {
+                _loginState.update {
+                    it.copy(
+                        isLoading = false,
+                        loginError = "حدث خطأ ما. يرجى المحاولة مرة أخرى 🤕"
+                    )
                 }
             }
         }
+
     }
 
     fun resetLoginForm() {
         _loginState.update { LoginFormState() }
+    }
+
+    suspend fun checkAuthFromStateManager() {
+        authStateManager.checkAuthStatus()
     }
 }

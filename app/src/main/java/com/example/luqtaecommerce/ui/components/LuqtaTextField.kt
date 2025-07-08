@@ -21,6 +21,7 @@ import com.example.luqtaecommerce.ui.theme.RedFont
 
 @Composable
 fun LuqtaTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -34,7 +35,7 @@ fun LuqtaTextField(
         onValueChange = onValueChange,
         placeholder = { Text(text = placeholder, color = GrayPlaceholder, fontSize = 14.sp) },
         singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.small,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,

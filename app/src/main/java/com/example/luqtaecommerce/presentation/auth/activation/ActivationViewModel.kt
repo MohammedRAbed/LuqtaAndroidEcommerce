@@ -1,0 +1,43 @@
+package com.example.luqtaecommerce.presentation.auth.activation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.luqtaecommerce.domain.model.auth.ActivationRequest
+import com.example.luqtaecommerce.domain.use_case.auth.ActivateAccountUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import com.example.luqtaecommerce.domain.use_case.Result
+
+class ActivationViewModel(
+    private val activateUserUseCase: ActivateAccountUseCase
+) : ViewModel() {
+
+    private val _activationState = MutableStateFlow(ActivationState())
+    val activationState = _activationState.asStateFlow()
+
+    fun activateAccount(uid: String, token: String) {
+        viewModelScope.launch {
+            _activationState.update { it.copy(isLoading = true) }
+            val activationRequest = ActivationRequest(uid, token)
+            when (val result = activateUserUseCase(activationRequest)) {
+                is Result.Success -> {
+                    _activationState.update {
+                        it.copy(isLoading = false, isSuccess = true)
+                    }
+                }
+                is Result.Error -> {
+                    _activationState.update {
+                        it.copy(isLoading = false, error = result.message)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
+    fun reset() {
+        _activationState.value = ActivationState()
+    }
+}

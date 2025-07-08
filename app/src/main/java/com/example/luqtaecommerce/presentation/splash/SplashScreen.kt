@@ -1,9 +1,11 @@
 package com.example.luqtaecommerce.presentation.splash
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,30 +18,46 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
+import com.example.luqtaecommerce.presentation.auth.AuthState
 import com.example.luqtaecommerce.presentation.navigation.Screen
+import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SplashScreen(
     navController: NavController,
-    viewModel: SplashViewModel
+    viewModel: SplashViewModel = koinViewModel()
 ) {
-    val isLoading by viewModel.isLoading.collectAsState()
+    val authState by viewModel.authState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.startSplashScreen()
+        Log.e("SplashViewModel", "init")
+        viewModel.initAuthCheck()
     }
 
-    LaunchedEffect(isLoading) {
-        if(!isLoading) {
-            navController.navigate(Screen.Login.route) {
-                popUpTo(0)
-                launchSingleTop = true
+    LaunchedEffect(authState) {
+        Log.e("SplashScreen", "navigationDestination: ${authState}")
+        when (authState) {
+            is AuthState.Loading -> {}
+            is AuthState.Authenticated -> {
+                delay(300)
+                navController.navigate(Screen.Main.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+            is AuthState.Unauthenticated -> {
+                delay(300)
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                }
             }
         }
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.White),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -53,5 +71,5 @@ fun SplashScreen(
 @Composable
 fun PreviewSplashScreen() {
     // Replace with a placeholder drawable resource from your project
-    SplashScreen(rememberNavController(), SplashViewModel())
+    //SplashScreen(rememberNavController(), SplashViewModel())
 }

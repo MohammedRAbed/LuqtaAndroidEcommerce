@@ -11,18 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun LuqtaButton(
+    modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.small,
         colors = ButtonDefaults.buttonColors(
@@ -35,6 +37,7 @@ fun LuqtaButton(
             fontWeight = FontWeight.Bold,
             color = Color.White,
             fontSize = 16.sp,
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(vertical = 11.dp)
         )
     }
