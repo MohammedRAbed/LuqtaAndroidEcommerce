@@ -65,6 +65,9 @@ import com.example.luqtaecommerce.domain.model.product.CategoryDetail
 import com.example.luqtaecommerce.domain.model.product.ProductDetails
 import com.example.luqtaecommerce.domain.model.product.Rating
 import com.example.luqtaecommerce.domain.use_case.Result
+import com.example.luqtaecommerce.presentation.main.cart.CartOperationStatus
+import com.example.luqtaecommerce.presentation.main.cart.CartState
+import com.example.luqtaecommerce.presentation.main.cart.CartViewModel
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.AddedToCartSnackBar
 import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
@@ -72,6 +75,7 @@ import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnrememberedGetBackStackEntry")
@@ -79,17 +83,17 @@ import org.koin.androidx.compose.koinViewModel
 fun ProductDetailsScreen(
     navController: NavController,
     slug: String,
-    viewModel: ProductDetailsViewModel = koinViewModel(),
+    productDetailsViewModel: ProductDetailsViewModel = koinViewModel(),
+    cartViewModel: CartViewModel = koinViewModel()
 ) {
+    val cartState = cartViewModel.cartState.collectAsState().value
 
     LaunchedEffect(Unit) {
-        viewModel.getProductDetails(slug)
+        productDetailsViewModel.getProductDetails(slug)
     }
 
-
-    val showAddToCartMessage = viewModel.showAddToCartMessage.collectAsState().value
-
-    when (val productDetailState = viewModel.productDetailsState.collectAsState().value) {
+    when (val productDetailState =
+        productDetailsViewModel.productDetailsState.collectAsState().value) {
         is Result.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = PrimaryCyan)
@@ -97,7 +101,7 @@ fun ProductDetailsScreen(
         }
 
         is Result.Error -> {
-            LoadErrorView { viewModel.getProductDetails(slug) }
+            LoadErrorView { productDetailsViewModel.getProductDetails(slug) }
             Log.e(
                 "Product Details Error",
                 productDetailState.message ?: productDetailState.exception.localizedMessage
@@ -108,8 +112,10 @@ fun ProductDetailsScreen(
             ProductDetailContent(
                 navController = navController,
                 product = productDetailState.data,
-                showMessage = showAddToCartMessage,
-                onAddToCart = { viewModel.onAddToCartClicked() }
+                cartState = cartState,
+                onAddToCart = { quantity ->
+                    cartViewModel.addToCart(productDetailState.data.productId, quantity)
+                }
             )
         }
     }
@@ -120,10 +126,11 @@ fun ProductDetailsScreen(
 fun ProductDetailContent(
     navController: NavController,
     product: ProductDetails,
-    showMessage: Boolean = false,
-    onAddToCart: () -> Unit = {}
+    cartState: CartState,
+    onAddToCart: (quantity: Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    var quantity by remember { mutableIntStateOf(1) }
     var showFullDescription by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
@@ -150,7 +157,7 @@ fun ProductDetailContent(
         }
 
         AnimatedVisibility(
-            visible = showMessage,
+            visible = cartState.operationStatus == CartOperationStatus.ADD_SUCCESS,
             enter = slideInVertically(
                 initialOffsetY = { -it }, // Start above the screen
                 animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
@@ -173,6 +180,7 @@ fun ProductDetailContent(
                 }
             }
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -186,7 +194,6 @@ fun ProductDetailContent(
                     .size(32.dp)
                     .clip(CircleShape),
                 onClick = { navController.popBackStack() },
-                enabled = !showMessage
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.back_arrow),
@@ -370,20 +377,19 @@ fun ProductDetailContent(
                                 shape = RoundedCornerShape(8.dp)
                             )
                     ) {
-                        var quantity by remember { mutableIntStateOf(1) }
                         // Decrease button
                         IconButton(
                             onClick = { if (quantity > 1) quantity-- },
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp)),
-                            enabled = quantity>1
+                            enabled = quantity > 1
                         ) {
                             Icon(
                                 painter = painterResource(
                                     id = R.drawable.ic_minus_en
                                 ), // You'll need a minus icon
                                 contentDescription = "Decrease quantity",
-                                tint = if (quantity>1) Color.Black else GrayPlaceholder
+                                tint = if (quantity > 1) Color.Black else GrayPlaceholder
                             )
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -439,12 +445,13 @@ fun ProductDetailContent(
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Button(
-                            onClick = onAddToCart,
+                            onClick = { onAddToCart(quantity) },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(50.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(12.dp),
+                            enabled = !cartState.isLoading
                         ) {
                             Text(
                                 text = "إضافة إلى السلة",
@@ -502,7 +509,8 @@ fun ProductDetailScreenPreview() {
         ProductDetailContent(
             navController = rememberNavController(),
             product = sampleProduct,
-            showMessage = true
+            cartState = CartState(),
+            onAddToCart = {}
         )
     }
 }

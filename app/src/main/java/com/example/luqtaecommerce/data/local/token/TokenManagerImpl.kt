@@ -1,18 +1,14 @@
-package com.example.luqtaecommerce.data.local
+package com.example.luqtaecommerce.data.local.token
 
 import android.content.Context
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import com.example.luqtaecommerce.data.local.CryptoManager
+import com.example.luqtaecommerce.data.local.appDataStore
 import com.example.luqtaecommerce.domain.model.auth.AuthTokens
-import com.example.luqtaecommerce.domain.model.auth.User
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class TokenManagerImpl(
     private val context: Context,

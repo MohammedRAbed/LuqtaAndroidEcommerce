@@ -29,6 +29,7 @@ val networkModule = module {
         OkHttpClient.Builder()
             .cookieJar(sessionCookieJar)
             .addInterceptor(get<AuthInterceptor>())
+            //.authenticator(get<TokenAuthenticator>())
             .addInterceptor(logging)
             .connectTimeout(7, TimeUnit.SECONDS)
             .readTimeout(7, TimeUnit.SECONDS)

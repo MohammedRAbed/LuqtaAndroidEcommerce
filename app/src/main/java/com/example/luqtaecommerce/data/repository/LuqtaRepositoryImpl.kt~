@@ -358,16 +358,7 @@ class LuqtaRepositoryImpl(
     }
 
     override suspend fun removeFromCart(productId: String): Result<String> {
-        return try {
-            val response = api.removeFromCart(productId)
-            if (response.isSuccessful) {
-                Result.success("Successfully removed product from cart")
-            } else {
-                Result.failure(Exception(response.message()))
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Failed to remove product from cart"))
-        }
+        TODO("Not yet implemented")
     }
 
 

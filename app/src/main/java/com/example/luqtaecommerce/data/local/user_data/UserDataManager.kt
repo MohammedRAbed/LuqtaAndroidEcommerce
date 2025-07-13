@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.data.local
+package com.example.luqtaecommerce.data.local.user_data
 
 import com.example.luqtaecommerce.domain.model.auth.User
 

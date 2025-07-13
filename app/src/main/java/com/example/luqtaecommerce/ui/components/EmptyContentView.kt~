@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -54,6 +55,10 @@ fun EmptyContentView(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
         )
-        LuqtaButton(text = "تصفح المنتجات") { navController.navigate(Screen.Categories.route) }
+        LuqtaButton(text = "تصفح المنتجات") {
+            navController.navigate(Screen.Categories.route) {
+                launchSingleTop = true
+            }
+        }
     }
 }

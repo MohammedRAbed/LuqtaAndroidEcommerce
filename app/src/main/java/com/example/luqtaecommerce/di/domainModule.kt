@@ -1,10 +1,10 @@
 package com.example.luqtaecommerce.di
 
 import com.example.luqtaecommerce.data.local.CryptoManager
-import com.example.luqtaecommerce.data.local.TokenManager
-import com.example.luqtaecommerce.data.local.TokenManagerImpl
-import com.example.luqtaecommerce.data.local.UserDataManager
-import com.example.luqtaecommerce.data.local.UserDataManagerImpl
+import com.example.luqtaecommerce.data.local.token.TokenManager
+import com.example.luqtaecommerce.data.local.token.TokenManagerImpl
+import com.example.luqtaecommerce.data.local.user_data.UserDataManager
+import com.example.luqtaecommerce.data.local.user_data.UserDataManagerImpl
 import com.example.luqtaecommerce.domain.use_case.auth.ActivateAccountUseCase
 import com.example.luqtaecommerce.domain.use_case.auth.CheckAuthStatusUseCase
 import com.example.luqtaecommerce.domain.use_case.auth.GetCurrentUserUseCase
@@ -15,6 +15,9 @@ import com.example.luqtaecommerce.domain.use_case.auth.RefreshUserDataUseCase
 import com.example.luqtaecommerce.domain.use_case.auth.SignupUseCase
 import com.example.luqtaecommerce.domain.use_case.auth.UpdateProfilePicUseCase
 import com.example.luqtaecommerce.domain.use_case.auth.VerifyTokenUseCase
+import com.example.luqtaecommerce.domain.use_case.cart.AddToCartUseCase
+import com.example.luqtaecommerce.domain.use_case.cart.GetCartUseCase
+import com.example.luqtaecommerce.domain.use_case.cart.RemoveFromCartUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
@@ -49,4 +52,9 @@ val domainModule = module {
     single { GetCategoriesUseCase(get()) }
     single { GetProductsUseCase(get()) }
     single { GetProductDetailsUseCase(get()) }
+
+    // Cart
+    single { AddToCartUseCase(get()) }
+    single { GetCartUseCase(get()) }
+    single { RemoveFromCartUseCase(get()) }
 }

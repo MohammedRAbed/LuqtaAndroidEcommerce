@@ -4,18 +4,21 @@ import com.example.luqtaecommerce.domain.model.auth.ActivationRequest
 import com.example.luqtaecommerce.domain.model.auth.AuthTokens
 import com.example.luqtaecommerce.domain.model.auth.LoginRequest
 import com.example.luqtaecommerce.domain.model.auth.LogoutRequest
-import com.example.luqtaecommerce.domain.model.auth.OuterAuthResponse
+import com.example.luqtaecommerce.domain.model.auth.AuthResponse
 import com.example.luqtaecommerce.domain.model.auth.RefreshTokenRequest
 import com.example.luqtaecommerce.domain.model.auth.SignupRequest
 import com.example.luqtaecommerce.domain.model.auth.User
 import com.example.luqtaecommerce.domain.model.auth.VerifyTokenRequest
+import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
+import com.example.luqtaecommerce.domain.model.cart.Cart
+import com.example.luqtaecommerce.domain.model.cart.CartResponse
 import com.example.luqtaecommerce.domain.model.product.CategoryResponse
 import com.example.luqtaecommerce.domain.model.product.ProductCatalogResponse
 import com.example.luqtaecommerce.domain.model.product.ProductDetailsResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -25,41 +28,40 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LuqtaApi {
-    // Authentication
+    /*------------------ Authentication ------------------*/
+
+    // Authentication - Register and Activate
     @POST("auth/register/")
     suspend fun signup(@Body request: SignupRequest): Response<Unit>
-
     @POST("auth/activate/")
     suspend fun activate(@Body request: ActivationRequest): Response<Unit>
 
 
+    // Authentication - Login and Logout
     @POST("auth/token/create/")
-    suspend fun login(@Body request: LoginRequest): Response<OuterAuthResponse<AuthTokens>>
-
+    suspend fun login(@Body request: LoginRequest): Response<AuthResponse<AuthTokens>>
     @POST("auth/token/refresh/")
-    suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<OuterAuthResponse<AuthTokens>>
-
+    suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<AuthResponse<AuthTokens>>
     @POST("auth/token/verify/")
-    suspend fun verifyToken(@Body request: VerifyTokenRequest): Response<OuterAuthResponse<AuthTokens>>
-
+    suspend fun verifyToken(@Body request: VerifyTokenRequest): Response<AuthResponse<AuthTokens>>
     @POST("auth/token/destroy/")
     suspend fun logout(@Body request: LogoutRequest): Response<Unit>
 
 
+    /*------------------ Profile ------------------*/
     @GET("auth/me/")
-    suspend fun getProfile(): Response<OuterAuthResponse<User>>
-
+    suspend fun getProfile(): Response<AuthResponse<User>>
     @Multipart
     @PATCH("auth/me/")
     suspend fun updateProfilePic(
         @Part profilePic: MultipartBody.Part
     ): Response<Unit>
 
-    // Categories
+    /*------------------ Categories ------------------*/
     @GET("api/v1/categories/")
     suspend fun getCategories(): CategoryResponse
 
-    // Products
+    /* ------------------ Products ------------------*/
     @GET("api/v1/products/")
     suspend fun getProducts(
         @Query("category") categorySlug: String? = null,
@@ -73,4 +75,19 @@ interface LuqtaApi {
     suspend fun getProductDetails(
         @Path("slug") slug: String
     ): ProductDetailsResponse
+
+
+    /* ------------------ Cart ------------------ */
+    @GET("api/v1/cart/")
+    suspend fun getCart(): CartResponse
+
+    @POST("api/v1/cart/{product_id}/add/")
+    suspend fun addToCart(
+        @Path("product_id") productId: String,
+        @Body body: AddToCartRequest
+    ): Response<Unit>
+
+    @DELETE("api/v1/cart/{product_id}/remove/")
+    suspend fun removeFromCart(@Path("product_id") productId: String): Response<Unit>
+
 }

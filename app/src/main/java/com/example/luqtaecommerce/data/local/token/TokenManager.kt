@@ -1,7 +1,6 @@
-package com.example.luqtaecommerce.data.local
+package com.example.luqtaecommerce.data.local.token
 
 import com.example.luqtaecommerce.domain.model.auth.AuthTokens
-import com.example.luqtaecommerce.domain.model.auth.User
 
 interface TokenManager {
     suspend fun saveTokens(tokens: AuthTokens)

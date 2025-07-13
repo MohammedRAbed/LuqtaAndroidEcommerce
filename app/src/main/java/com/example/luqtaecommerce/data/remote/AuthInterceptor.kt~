@@ -1,6 +1,6 @@
 package com.example.luqtaecommerce.data.remote
 
-import com.example.luqtaecommerce.data.local.token.TokenManager
+import com.example.luqtaecommerce.data.local.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -1,0 +1,44 @@
+package com.example.luqtaecommerce.data.local.session
+
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.luqtaecommerce.data.local.appDataStore
+import kotlinx.coroutines.flow.first
+
+class SessionManagerImpl(
+    private val context: Context
+): SessionManager {
+
+    private val dataStore = context.appDataStore
+
+    private companion object {
+        val SESSION_COOKIE_KEY = stringPreferencesKey("session_id")
+    }
+
+    override suspend fun saveSessionId(sessionId: String) {
+        try {
+            dataStore.edit { preferences ->
+                preferences[SESSION_COOKIE_KEY] = sessionId
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override suspend fun getSessionId(): String? {
+        return try {
+            dataStore.data.first()[SESSION_COOKIE_KEY]
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    override suspend fun clearSessionId() {
+        dataStore.edit { preferences ->
+            preferences.remove(SESSION_COOKIE_KEY)
+        }
+    }
+
+}

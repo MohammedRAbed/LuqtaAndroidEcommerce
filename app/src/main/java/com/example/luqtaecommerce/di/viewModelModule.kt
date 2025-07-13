@@ -5,6 +5,7 @@ import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswo
 import com.example.luqtaecommerce.presentation.auth.login.LoginViewModel
 import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
 import com.example.luqtaecommerce.presentation.main.MainViewModel
+import com.example.luqtaecommerce.presentation.main.cart.CartViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
 import com.example.luqtaecommerce.presentation.main.home.HomeViewModel
 import com.example.luqtaecommerce.presentation.main.products.ProductDetailsViewModel
@@ -21,7 +22,6 @@ val viewModelModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get()) }
     viewModel { ForgotPasswordViewModel(get(), get(), get()) }
 
-    //viewModel { MainViewModel(get()) }
 
     viewModel { HomeViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
@@ -33,4 +33,6 @@ val viewModelModule = module {
             updateProfilePictureUseCase = get()
         )
     }
+
+    viewModel { CartViewModel(get(), get(), get()) }
 }

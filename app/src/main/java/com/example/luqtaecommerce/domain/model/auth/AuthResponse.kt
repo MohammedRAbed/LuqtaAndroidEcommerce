@@ -1,12 +1,12 @@
 package com.example.luqtaecommerce.domain.model.auth
 
-data class OuterAuthResponse<T>(
+data class AuthResponse<T>(
     val success: Boolean,
     val message: String,
-    val data: AuthDataWrapper<T>
+    val data: AuthResponseData<T>
 )
 
-data class AuthDataWrapper<T>(
+data class AuthResponseData<T>(
     val message: String,
     val data: T
 )
