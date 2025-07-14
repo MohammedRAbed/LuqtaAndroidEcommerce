@@ -1,0 +1,4 @@
+package com.example.luqtaecommerce.domain.model.cart
+
+class AddToCartRequest {
+}

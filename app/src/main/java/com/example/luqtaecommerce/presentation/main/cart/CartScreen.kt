@@ -60,13 +60,22 @@ import com.example.luqtaecommerce.domain.model.cart.CartItem
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.luqtaecommerce.ui.components.LuqtaTextField
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
     navController: NavController,
     viewModel: CartViewModel = koinViewModel()
 ) {
     val state = viewModel.cartState.collectAsState().value
+    val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(Unit) {
         Log.e("CartScreen", "LaunchedEffect")
@@ -76,6 +85,49 @@ fun CartScreen(
     LaunchedEffect(state.operationStatus) {
         if (state.operationStatus == CartOperationStatus.REMOVE_SUCCESS) {
             viewModel.loadCart()
+        }
+    }
+
+    if (state.isCouponSheetVisible) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.hideCouponSheet() },
+            sheetState = sheetState
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("أدخل رمز الكوبون", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                LuqtaTextField(
+                    value = state.couponCode,
+                    onValueChange = { viewModel.onCouponCodeChange(it) },
+                    placeholder = "رمز الكوبون"
+                )
+                if (state.couponError != null) {
+                    Text(state.couponError, color = RedFont, fontSize = 14.sp, modifier = Modifier.padding(top = 8.dp))
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    LuqtaButton(
+                        text = "إلغاء",
+                        modifier = Modifier.weight(1f),
+                        onClick = { viewModel.hideCouponSheet() }
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    LuqtaButton(
+                        text = "تطبيق",
+                        modifier = Modifier.weight(1f),
+                        onClick = { viewModel.applyCoupon() },
+                        enabled = !state.isLoading
+                    )
+                }
+            }
         }
     }
 
@@ -125,9 +177,12 @@ fun CartScreen(
                         )
                         Text(
                             text = "كوبون الخصم",
-                            color = PrimaryCyan,
+                            color = if(state.cart.coupon == null) PrimaryCyan else GrayFont,
                             fontWeight = FontWeight.Medium,
-                            fontSize = 15.sp
+                            fontSize = 15.sp,
+                            modifier = if(state.cart.coupon == null) {
+                                Modifier.clickable { viewModel.showCouponSheet() }
+                            } else { Modifier }
                         )
                     }
                     // Cart Items
@@ -162,17 +217,47 @@ fun CartScreen(
                                 fontSize = 17.sp,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("المجموع", color = GrayFont, fontSize = 15.sp)
-                                Text(
-                                    "${state.cart.totalPrice.withDiscount + 0.0}",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 15.sp
-                                )
+                            if(state.cart.coupon != null) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("المجموع (بدون الخصم)", color = GrayFont, fontSize = 15.sp)
+                                    Text(
+                                        "${state.cart.totalPrice.withoutDiscount + 0.0}",
+                                        fontWeight = FontWeight.Medium,
+                                        color = GrayFont,
+                                        fontSize = 15.sp,
+                                        style = TextStyle(
+                                            textDecoration = TextDecoration.LineThrough
+                                        )
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("المجموع (مع الخصم)", color = GrayFont, fontSize = 15.sp)
+                                    Text(
+                                        "${state.cart.totalPrice.withDiscount + 0.0}",
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Black,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            } else {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("المجموع", color = GrayFont, fontSize = 15.sp)
+                                    Text(
+                                        "${state.cart.totalPrice.withDiscount + 0.0}",
+                                        color = Color.Black,
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 15.sp
+                                    )
+                                }
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -300,10 +385,4 @@ private fun CartItemRow(cartItem: CartItem, onDelete: () -> Unit) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun CartScreenPreview() {
-    CartScreen(navController = rememberNavController())
 }

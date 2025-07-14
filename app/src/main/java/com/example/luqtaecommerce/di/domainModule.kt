@@ -18,6 +18,7 @@ import com.example.luqtaecommerce.domain.use_case.auth.VerifyTokenUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.AddToCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.GetCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.RemoveFromCartUseCase
+import com.example.luqtaecommerce.domain.use_case.cart.ApplyCouponUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
@@ -57,4 +58,5 @@ val domainModule = module {
     single { AddToCartUseCase(get()) }
     single { GetCartUseCase(get()) }
     single { RemoveFromCartUseCase(get()) }
+    single { com.example.luqtaecommerce.domain.use_case.cart.ApplyCouponUseCase(get()) }
 }

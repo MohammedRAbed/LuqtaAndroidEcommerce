@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.product.Pagination
 import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.cart.AddToCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.GetCartUseCase
+import com.example.luqtaecommerce.domain.use_case.cart.ApplyCouponUseCase
 import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,13 +32,18 @@ data class CartState(
     val cart: Cart? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val operationStatus: CartOperationStatus? = CartOperationStatus.NONE
+    val operationStatus: CartOperationStatus? = CartOperationStatus.NONE,
+    val isCouponSheetVisible: Boolean = false,
+    val couponCode: String = "",
+    val couponResult: ApplyCouponResponse? = null,
+    val couponError: String? = null
 )
 
 class CartViewModel(
     private val getCartUseCase: GetCartUseCase,
     private val addToCartUseCase: AddToCartUseCase,
-    private val removeFromCartUseCase: RemoveFromCartUseCase
+    private val removeFromCartUseCase: RemoveFromCartUseCase,
+    private val applyCouponUseCase: ApplyCouponUseCase
 ): ViewModel() {
 
     private var _cartState = MutableStateFlow(CartState())
@@ -132,6 +140,50 @@ class CartViewModel(
 
                     else -> {}
                 }
+            }
+        }
+    }
+
+    fun showCouponSheet() {
+        _cartState.update { it.copy(isCouponSheetVisible = true, couponError = null) }
+    }
+    fun hideCouponSheet() {
+        _cartState.update { it.copy(isCouponSheetVisible = false, couponCode = "", couponError = null) }
+    }
+    fun onCouponCodeChange(code: String) {
+        _cartState.update { it.copy(couponCode = code) }
+    }
+    fun applyCoupon() {
+        val code = _cartState.value.couponCode.trim()
+        if (code.isEmpty()) {
+            _cartState.update { it.copy(couponError = "يرجى إدخال رمز الكوبون") }
+            return
+        }
+        _cartState.update { it.copy(isLoading = true, couponError = null) }
+        viewModelScope.launch {
+            val request = ApplyCouponRequest(code = code)
+            val result = applyCouponUseCase(request)
+            when (result) {
+                is Result.Success -> {
+                    _cartState.update {
+                        it.copy(
+                            isLoading = false,
+                            couponResult = result.data,
+                            couponError = null,
+                            isCouponSheetVisible = false
+                        )
+                    }
+                    loadCart() // Refresh cart after coupon
+                }
+                is Result.Error -> {
+                    _cartState.update {
+                        it.copy(
+                            isLoading = false,
+                            couponError = result.message ?: result.exception.localizedMessage
+                        )
+                    }
+                }
+                else -> {}
             }
         }
     }

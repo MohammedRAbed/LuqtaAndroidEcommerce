@@ -12,8 +12,6 @@ import com.example.luqtaecommerce.domain.model.auth.VerifyTokenRequest
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.cart.CartResponse
-import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
-import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.product.CategoryResponse
 import com.example.luqtaecommerce.domain.model.product.ProductCatalogResponse
 import com.example.luqtaecommerce.domain.model.product.ProductDetailsResponse
@@ -94,5 +92,5 @@ interface LuqtaApi {
 
     /* ------------------ Coupon ------------------ */
     @POST("api/v1/coupon/apply-coupon/")
-    suspend fun applyCoupon(@Body request: ApplyCouponRequest): Response<ApplyCouponResponse>
+    suspend fun applyCoupon(@Body request: com.example.luqtaecommerce.domain.model.cart.ApplyCouponRequest): retrofit2.Response<com.example.luqtaecommerce.domain.model.cart.ApplyCouponResponse>
 }

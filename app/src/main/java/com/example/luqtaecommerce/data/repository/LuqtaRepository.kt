@@ -8,6 +8,8 @@ import com.example.luqtaecommerce.domain.model.auth.SignupRequest
 import com.example.luqtaecommerce.domain.model.auth.User
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.product.Category
 import com.example.luqtaecommerce.domain.model.product.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
@@ -45,4 +47,7 @@ interface LuqtaRepository {
     suspend fun getCart(): Result<Cart>
     suspend fun addToCart(productId: String, addToCartRequest: AddToCartRequest): Result<String>
     suspend fun removeFromCart(productId: String): Result<String>
+
+    // Coupon
+    suspend fun applyCoupon(request: ApplyCouponRequest): Result<ApplyCouponResponse>
 }

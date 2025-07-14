@@ -1,12 +1,9 @@
 package com.example.luqtaecommerce.domain.model.cart
 
+import com.example.luqtaecommerce.domain.model.coupon.Coupon
 import com.example.luqtaecommerce.domain.model.product.Product
 import com.google.gson.annotations.SerializedName
 
-data class AddToCartRequest(
-    val quantity: Int,
-    val override: Boolean = false
-)
 
 data class CartItem(
     val product: Product,
@@ -22,5 +19,5 @@ data class CartTotalPrice(
 data class Cart(
     val items: List<CartItem>,
     @SerializedName("total_price") val totalPrice: CartTotalPrice,
-    val coupon: String? = null
+    val coupon: Coupon? = null
 )

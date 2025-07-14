@@ -17,6 +17,8 @@ import com.example.luqtaecommerce.domain.model.auth.User
 import com.example.luqtaecommerce.domain.model.auth.VerifyTokenRequest
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
+import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.product.Category
 import com.example.luqtaecommerce.domain.model.product.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
@@ -367,6 +369,22 @@ class LuqtaRepositoryImpl(
             }
         } catch (e: Exception) {
             Result.failure(Exception("Failed to remove product from cart"))
+        }
+    }
+
+    override suspend fun applyCoupon(request: ApplyCouponRequest): Result<ApplyCouponResponse> {
+        return try {
+            val response = api.applyCoupon(request)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    Result.success(it)
+                } ?: Result.failure(Exception("Empty response body"))
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Result.failure(Exception(errorBody ?: response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
