@@ -10,6 +10,7 @@ import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
+import com.example.luqtaecommerce.domain.model.order.Order
 import com.example.luqtaecommerce.domain.model.product.Category
 import com.example.luqtaecommerce.domain.model.product.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
@@ -50,4 +51,12 @@ interface LuqtaRepository {
 
     // Coupon
     suspend fun applyCoupon(request: ApplyCouponRequest): Result<ApplyCouponResponse>
+
+    // Orders
+    suspend fun createOrder(coupon: String? = null): Result<Order>
+    suspend fun getOrders(): Result<List<Order>>
+    suspend fun getOrderById(orderId: String): Result<Order>
+
+    // Payment
+    suspend fun startPaymentSession(orderId: String): Result<String>
 }

@@ -49,12 +49,11 @@ import com.example.luqtaecommerce.presentation.main.products.ProductsScreen
 import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import com.example.luqtaecommerce.presentation.main.profile.AddProfilePicScreen
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
-import com.example.luqtaecommerce.presentation.main.watchlist.WatchlistScreen
+import com.example.luqtaecommerce.presentation.main.orders.OrdersScreen
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.presentation.navigation.bottomNavItems
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import org.koin.androidx.compose.navigation.koinNavViewModel
-import org.koin.androidx.compose.get
 import org.koin.compose.koinInject
 
 @Composable
@@ -73,7 +72,7 @@ fun MainScreen(
         Screen.Home.route,
         Screen.Categories.route,
         Screen.Cart.route,
-        Screen.Watchlist.route,
+        Screen.Orders.route,
         Screen.Profile.route
     )
 
@@ -157,7 +156,7 @@ fun MainScreen(
                         Screen.Home.route -> HomeScreen(navController, userState)
                         Screen.Categories.route -> CategoriesScreen(navController)
                         Screen.Cart.route -> CartScreen(navController)
-                        Screen.Watchlist.route -> WatchlistScreen(navController)
+                        Screen.Orders.route -> OrdersScreen(navController)
                         Screen.Profile.route -> ProfileScreen(
                             outerNavController = outerNavController,
                             navController = navController,

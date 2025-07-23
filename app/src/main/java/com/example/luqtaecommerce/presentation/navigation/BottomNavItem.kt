@@ -30,10 +30,10 @@ val bottomNavItems = listOf(
         Screen.Cart.route
     ),
     BottomNavItem(
-        "المفضلة",
-        R.drawable.ic_watchlist,
-        R.drawable.ic_watchlist_selected,
-        Screen.Watchlist.route
+        "الطلبات",
+        R.drawable.ic_orders,
+        R.drawable.ic_orders_selected,
+        Screen.Orders.route
     ),
     BottomNavItem(
         "الحساب",

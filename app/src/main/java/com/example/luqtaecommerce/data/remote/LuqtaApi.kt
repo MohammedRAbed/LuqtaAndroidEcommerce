@@ -14,6 +14,10 @@ import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.cart.CartResponse
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
+import com.example.luqtaecommerce.domain.model.order.CreateOrderRequest
+import com.example.luqtaecommerce.domain.model.order.OrderResponse
+import com.example.luqtaecommerce.domain.model.order.OrdersListResponse
+import com.example.luqtaecommerce.domain.model.payment.PaymentSessionResponse
 import com.example.luqtaecommerce.domain.model.product.CategoryResponse
 import com.example.luqtaecommerce.domain.model.product.ProductCatalogResponse
 import com.example.luqtaecommerce.domain.model.product.ProductDetailsResponse
@@ -66,7 +70,7 @@ interface LuqtaApi {
     /* ------------------ Products ------------------*/
     @GET("api/v1/products/")
     suspend fun getProducts(
-        @Query("category") categorySlug: String? = null,
+        @Query("category__slug") categorySlug: String? = null,
         @Query("name__icontains") searchQuery: String? = null,
         @Query("ordering") ordering: String? = null,
         @Query("page") page: Int? = null,
@@ -95,4 +99,18 @@ interface LuqtaApi {
     /* ------------------ Coupon ------------------ */
     @POST("api/v1/coupon/apply-coupon/")
     suspend fun applyCoupon(@Body request: ApplyCouponRequest): Response<ApplyCouponResponse>
+
+    /* ------------------ Orders ------------------ */
+    @POST("api/v1/orders/")
+    suspend fun createOrder(@Body request: CreateOrderRequest): Response<OrderResponse>
+
+    @GET("api/v1/orders/")
+    suspend fun getOrders(): Response<OrdersListResponse>
+
+    @GET("api/v1/orders/{order_id}/")
+    suspend fun getOrderById(@Path("order_id") orderId: String): Response<OrderResponse>
+
+    /* ------------------ Payment ------------------ */
+    @POST("payment/process/{order_id}/")
+    suspend fun startPaymentSession(@Path("order_id") orderId: String): Response<PaymentSessionResponse>
 }

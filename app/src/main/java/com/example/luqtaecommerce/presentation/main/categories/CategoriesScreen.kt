@@ -66,8 +66,7 @@ fun CategoriesScreen(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 12.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             LuqtaBackHeader(title = "التصنيفات", navController = navController)

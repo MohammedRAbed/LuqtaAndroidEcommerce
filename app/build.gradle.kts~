@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 android {
     namespace = "com.example.luqtaecommerce"
+    // ...
     compileSdk = 34
 
     defaultConfig {
@@ -13,12 +15,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        // ...
     }
+    // ...
 
     buildTypes {
         release {

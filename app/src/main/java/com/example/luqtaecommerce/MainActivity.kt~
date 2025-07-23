@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    
+
     @Composable
     fun LuqtaApp() {
         navController = rememberNavController()

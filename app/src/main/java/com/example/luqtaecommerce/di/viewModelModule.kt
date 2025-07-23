@@ -8,6 +8,7 @@ import com.example.luqtaecommerce.presentation.main.MainViewModel
 import com.example.luqtaecommerce.presentation.main.cart.CartViewModel
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesViewModel
 import com.example.luqtaecommerce.presentation.main.home.HomeViewModel
+import com.example.luqtaecommerce.presentation.main.orders.OrdersViewModel
 import com.example.luqtaecommerce.presentation.main.products.ProductDetailsViewModel
 import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
 import com.example.luqtaecommerce.presentation.main.profile.ProfileViewModel
@@ -34,5 +35,7 @@ val viewModelModule = module {
         )
     }
 
-    viewModel { CartViewModel(get(), get(), get(), get()) }
+    viewModel { CartViewModel(get(), get(), get(), get(), get(), get()) }
+
+    viewModel { OrdersViewModel(get()) }
 }

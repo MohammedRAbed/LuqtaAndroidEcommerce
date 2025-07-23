@@ -1,5 +1,7 @@
 package com.example.luqtaecommerce.presentation.main.cart
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -65,8 +67,11 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,6 +82,11 @@ fun CartScreen(
     val state = viewModel.cartState.collectAsState().value
     val sheetState = rememberModalBottomSheetState()
 
+    val paymentUrl by viewModel.paymentUrl.collectAsState()
+    val isCheckingOut by viewModel.isCheckingOut.collectAsState()
+
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         Log.e("CartScreen", "LaunchedEffect")
         viewModel.loadCart()
@@ -85,6 +95,23 @@ fun CartScreen(
     LaunchedEffect(state.operationStatus) {
         if (state.operationStatus == CartOperationStatus.REMOVE_SUCCESS) {
             viewModel.loadCart()
+        }
+    }
+
+    // This effect launches the browser when the paymentUrl is received
+    LaunchedEffect(paymentUrl) {
+        paymentUrl?.let { url ->
+            //...
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Cart.route) { inclusive = true }
+                launchSingleTop = true
+            }
+
+            delay(100)
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            context.startActivity(intent)
+            viewModel.onPaymentUrlLaunched() // Reset the state
         }
     }
 
@@ -285,7 +312,8 @@ fun CartScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = 8.dp),
-                                onClick = { /* TODO: Checkout action */ }
+                                onClick = { viewModel.onCheckoutClicked() },
+                                enabled = !isCheckingOut
                             )
                         }
                     }

@@ -8,6 +8,4 @@ interface TokenManager {
     suspend fun getRefreshToken(): String?
     suspend fun clearTokens()
     suspend fun isLoggedIn(): Boolean
-
-
 }

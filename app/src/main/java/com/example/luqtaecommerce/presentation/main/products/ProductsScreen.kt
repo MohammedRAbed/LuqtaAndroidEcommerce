@@ -250,6 +250,7 @@ fun ProductsScreen(
                     )
                 } else {
                     LazyVerticalGrid(
+                        // ...
                         columns = GridCells.Fixed(2),
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(20.dp),

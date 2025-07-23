@@ -21,7 +21,11 @@ val dataModule = module {
 
     single<SessionManager> { SessionManagerImpl(get()) }
     single<TokenManager> { TokenManagerImpl(get(), get()) }
-    single<UserDataManager> { UserDataManagerImpl(get(), get()) }
+    single<UserDataManager> {
+        UserDataManagerImpl(get(), get())
+    }
 
-    single<LuqtaRepository> { LuqtaRepositoryImpl(get(), get(), get(), get()) }
+    single<LuqtaRepository> {
+        LuqtaRepositoryImpl(get(), get(), get(), get())
+    }
 }

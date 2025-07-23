@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
@@ -63,6 +64,7 @@ fun CheckEmailScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        /*
         LuqtaButton(
             text = "فتح تطبيق البريد",
             onClick = {
@@ -71,6 +73,21 @@ fun CheckEmailScreen(
                 }
                 try {
                     navController.context.startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(navController.context, "لا يوجد تطبيق بريد مثبت", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+        */
+
+        LuqtaButton(
+            text = "الانتقال لتسجيل الدخول",
+            onClick = {
+                try {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
                 } catch (e: Exception) {
                     Toast.makeText(navController.context, "لا يوجد تطبيق بريد مثبت", Toast.LENGTH_SHORT).show()
                 }

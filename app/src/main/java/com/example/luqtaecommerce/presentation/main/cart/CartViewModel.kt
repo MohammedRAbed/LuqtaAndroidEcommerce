@@ -21,7 +21,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.domain.use_case.cart.RemoveFromCartUseCase
+import com.example.luqtaecommerce.domain.use_case.order.CreateOrderUseCase
+import com.example.luqtaecommerce.domain.use_case.payment.StartPaymentSessionUseCase
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 enum class CartOperationStatus {
@@ -43,12 +46,20 @@ class CartViewModel(
     private val getCartUseCase: GetCartUseCase,
     private val addToCartUseCase: AddToCartUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
-    private val applyCouponUseCase: ApplyCouponUseCase
-): ViewModel() {
+    private val applyCouponUseCase: ApplyCouponUseCase,
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val startPaymentSessionUseCase: StartPaymentSessionUseCase
+) : ViewModel() {
 
     private var _cartState = MutableStateFlow(CartState())
     val cartState: StateFlow<CartState> = _cartState
 
+    private val _paymentUrl = MutableStateFlow<String?>(null)
+    val paymentUrl: StateFlow<String?> = _paymentUrl.asStateFlow()
+
+    // Add a state for loading during checkout
+    private val _isCheckingOut = MutableStateFlow(false)
+    val isCheckingOut: StateFlow<Boolean> = _isCheckingOut.asStateFlow()
 
     fun loadCart() {
         viewModelScope.launch {
@@ -62,13 +73,16 @@ class CartViewModel(
                             cart = result.data
                         )
                     }
+
                     is Result.Error -> {
                         _cartState.value = _cartState.value.copy(
                             isLoading = false,
-                            error = "CartViewModel Error: " + (result.message ?: result.exception.localizedMessage)
+                            error = "CartViewModel Error: " + (result.message
+                                ?: result.exception.localizedMessage)
                         )
                         Log.e("CertViewModel", _cartState.value.error!!)
                     }
+
                     else -> {}
                 }
             }
@@ -99,7 +113,8 @@ class CartViewModel(
                             it.copy(
                                 isLoading = false,
                                 operationStatus = CartOperationStatus.ERROR,
-                                error = "CartViewModel Error: " + (result.message ?: result.exception.localizedMessage)
+                                error = "CartViewModel Error: " + (result.message
+                                    ?: result.exception.localizedMessage)
                             )
                         }
                     }
@@ -133,7 +148,8 @@ class CartViewModel(
                             it.copy(
                                 isLoading = false,
                                 operationStatus = CartOperationStatus.ERROR,
-                                error = "CartViewModel Error: " + (result.message ?: result.exception.localizedMessage)
+                                error = "CartViewModel Error: " + (result.message
+                                    ?: result.exception.localizedMessage)
                             )
                         }
                     }
@@ -147,12 +163,21 @@ class CartViewModel(
     fun showCouponSheet() {
         _cartState.update { it.copy(isCouponSheetVisible = true, couponError = null) }
     }
+
     fun hideCouponSheet() {
-        _cartState.update { it.copy(isCouponSheetVisible = false, couponCode = "", couponError = null) }
+        _cartState.update {
+            it.copy(
+                isCouponSheetVisible = false,
+                couponCode = "",
+                couponError = null
+            )
+        }
     }
+
     fun onCouponCodeChange(code: String) {
         _cartState.update { it.copy(couponCode = code) }
     }
+
     fun applyCoupon() {
         val code = _cartState.value.couponCode.trim()
         if (code.isEmpty()) {
@@ -162,8 +187,7 @@ class CartViewModel(
         _cartState.update { it.copy(isLoading = true, couponError = null) }
         viewModelScope.launch {
             val request = ApplyCouponRequest(code = code)
-            val result = applyCouponUseCase(request)
-            when (result) {
+            when (val result = applyCouponUseCase(request)) {
                 is Result.Success -> {
                     _cartState.update {
                         it.copy(
@@ -175,6 +199,7 @@ class CartViewModel(
                     }
                     loadCart() // Refresh cart after coupon
                 }
+
                 is Result.Error -> {
                     _cartState.update {
                         it.copy(
@@ -183,8 +208,58 @@ class CartViewModel(
                         )
                     }
                 }
+
                 else -> {}
             }
         }
+    }
+
+    fun onCheckoutClicked() {
+        val coupon = _cartState.value.couponCode.trim()
+        viewModelScope.launch {
+            _isCheckingOut.value = true
+            createOrderUseCase(coupon).also { createOrderResult ->
+                when (createOrderResult) {
+                    is Result.Success -> {
+                        val orderId = createOrderResult.data.orderId
+                        // Step 2: Start payment session
+                        startPaymentSessionUseCase(orderId).also { startPaymentResult ->
+                            when(startPaymentResult) {
+                                is Result.Success -> {
+                                    _paymentUrl.value = startPaymentResult.data
+                                    _cartState.value = CartState()
+                                }
+                                is Result.Error -> {
+                                    _cartState.value = _cartState.value.copy(
+                                        isLoading = false,
+                                        error = "CartViewModel Error: " + (startPaymentResult.message
+                                            ?: startPaymentResult.exception.localizedMessage)
+                                    )
+                                    Log.e("CertViewModel - Payment", _cartState.value.error!!)
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _cartState.value = _cartState.value.copy(
+                            isLoading = false,
+                            error = "CartViewModel Error: " + (createOrderResult.message
+                                ?: createOrderResult.exception.localizedMessage)
+                        )
+                        Log.e("CertViewModel - Order", _cartState.value.error!!)
+                    }
+
+                    else -> {}
+                }
+            }
+
+            _isCheckingOut.value = false
+        }
+    }
+
+    fun onPaymentUrlLaunched() {
+        _paymentUrl.value = null
     }
 }

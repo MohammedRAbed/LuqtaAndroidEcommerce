@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Deep Link Intent Filter -->
+            <!-- Deep Link Intent Filter
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -40,8 +40,8 @@
                 <data android:scheme="http"
                     android:host="127.0.0.1"
                     android:port="8000"
-                    android:pathPrefix="/activate/" />
-            </intent-filter>
+                    android:pathPrefix="/payment/completed/" />
+            </intent-filter>-->
         </activity>
     </application>
 

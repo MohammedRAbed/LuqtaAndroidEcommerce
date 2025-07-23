@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         window.statusBarColor = Color.TRANSPARENT
         windowInsetsController.isAppearanceLightStatusBars = true
 
-        handleDeepLink(intent)
+        //handleDeepLink(intent)
 
         setContent {
             LuqtaEcommerceTheme {
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+/*
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleDeepLink(intent)
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+*/
     @Composable
     fun LuqtaApp() {
         navController = rememberNavController()

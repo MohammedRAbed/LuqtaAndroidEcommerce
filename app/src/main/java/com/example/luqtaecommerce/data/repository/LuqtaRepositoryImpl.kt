@@ -19,6 +19,7 @@ import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
+import com.example.luqtaecommerce.domain.model.order.CreateOrderRequest
 import com.example.luqtaecommerce.domain.model.product.Category
 import com.example.luqtaecommerce.domain.model.product.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
@@ -388,5 +389,60 @@ class LuqtaRepositoryImpl(
         }
     }
 
+    /* ----------------- Orders ----------------- */
+
+    override suspend fun createOrder(coupon: String?): Result<com.example.luqtaecommerce.domain.model.order.Order> {
+        return try {
+            val request = CreateOrderRequest(coupon)
+            val response = api.createOrder(request)
+            if (response.isSuccessful) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getOrders(): Result<List<com.example.luqtaecommerce.domain.model.order.Order>> {
+        return try {
+            val response = api.getOrders()
+            if (response.isSuccessful) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getOrderById(orderId: String): Result<com.example.luqtaecommerce.domain.model.order.Order> {
+        return try {
+            val response = api.getOrderById(orderId)
+            if (response.isSuccessful) {
+                Result.success(response.body()!!.data)
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // Payment
+    override suspend fun startPaymentSession(orderId: String): Result<String> {
+        return try {
+            val response = api.startPaymentSession(orderId)
+            if (response.isSuccessful) {
+                Result.success(response.body()!!.data.paymentUrl)
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
 }
