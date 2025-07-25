@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,11 +51,10 @@ import com.example.luqtaecommerce.domain.model.product.Category
 import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.presentation.main.categories.CategoryItem
-import com.example.luqtaecommerce.presentation.main.products.ProductItem
+import com.example.luqtaecommerce.presentation.main.products.catalog.ProductItem
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.ShimmerCategoriesRow
 import com.example.luqtaecommerce.ui.components.ShimmerProductItem
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 import kotlinx.coroutines.delay

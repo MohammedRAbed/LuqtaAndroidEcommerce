@@ -10,7 +10,6 @@ import com.example.luqtaecommerce.domain.model.auth.SignupRequest
 import com.example.luqtaecommerce.domain.model.auth.User
 import com.example.luqtaecommerce.domain.model.auth.VerifyTokenRequest
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
-import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.cart.CartResponse
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
@@ -21,6 +20,9 @@ import com.example.luqtaecommerce.domain.model.payment.PaymentSessionResponse
 import com.example.luqtaecommerce.domain.model.product.CategoryResponse
 import com.example.luqtaecommerce.domain.model.product.ProductCatalogResponse
 import com.example.luqtaecommerce.domain.model.product.ProductDetailsResponse
+import com.example.luqtaecommerce.domain.model.review.AddProductReviewRequest
+import com.example.luqtaecommerce.domain.model.review.AddProductReviewResponse
+import com.example.luqtaecommerce.domain.model.review.ProductReviewListResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -34,6 +36,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LuqtaApi {
+
     /*------------------ Authentication ------------------*/
 
     // Authentication - Register and Activate
@@ -63,9 +66,11 @@ interface LuqtaApi {
         @Part profilePic: MultipartBody.Part
     ): Response<Unit>
 
+
     /*------------------ Categories ------------------*/
     @GET("api/v1/categories/")
     suspend fun getCategories(): CategoryResponse
+
 
     /* ------------------ Products ------------------*/
     @GET("api/v1/products/")
@@ -96,9 +101,11 @@ interface LuqtaApi {
     @DELETE("api/v1/cart/{product_id}/remove/")
     suspend fun removeFromCart(@Path("product_id") productId: String): Response<Unit>
 
+
     /* ------------------ Coupon ------------------ */
     @POST("api/v1/coupon/apply-coupon/")
     suspend fun applyCoupon(@Body request: ApplyCouponRequest): Response<ApplyCouponResponse>
+
 
     /* ------------------ Orders ------------------ */
     @POST("api/v1/orders/")
@@ -110,7 +117,19 @@ interface LuqtaApi {
     @GET("api/v1/orders/{order_id}/")
     suspend fun getOrderById(@Path("order_id") orderId: String): Response<OrderResponse>
 
+
     /* ------------------ Payment ------------------ */
     @POST("payment/process/{order_id}/")
     suspend fun startPaymentSession(@Path("order_id") orderId: String): Response<PaymentSessionResponse>
+
+
+    /*------------------ Product Reviews ------------------*/
+    @GET("api/v1/products/{product_slug}/reviews/")
+    suspend fun getProductReviews(@Path("product_slug") productSlug: String): Response<ProductReviewListResponse>
+
+    @POST("api/v1/products/{product_slug}/reviews/")
+    suspend fun addProductReview(
+        @Path("product_slug") productSlug: String,
+        @Body body: AddProductReviewRequest
+    ): Response<AddProductReviewResponse>
 }

@@ -43,10 +43,10 @@ import com.example.luqtaecommerce.ui.components.LuqtaBottomNavItem
 import com.example.luqtaecommerce.presentation.main.cart.CartScreen
 import com.example.luqtaecommerce.presentation.main.categories.CategoriesScreen
 import com.example.luqtaecommerce.presentation.main.home.HomeScreen
-import com.example.luqtaecommerce.presentation.main.products.ProductDetailsScreen
-import com.example.luqtaecommerce.presentation.main.products.ProductSearchScreen
-import com.example.luqtaecommerce.presentation.main.products.ProductsScreen
-import com.example.luqtaecommerce.presentation.main.products.ProductsViewModel
+import com.example.luqtaecommerce.presentation.main.products.details.ProductDetailsScreen
+import com.example.luqtaecommerce.presentation.main.products.catalog.ProductSearchScreen
+import com.example.luqtaecommerce.presentation.main.products.catalog.ProductsScreen
+import com.example.luqtaecommerce.presentation.main.products.catalog.ProductsViewModel
 import com.example.luqtaecommerce.presentation.main.profile.AddProfilePicScreen
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
 import com.example.luqtaecommerce.presentation.main.orders.OrdersScreen

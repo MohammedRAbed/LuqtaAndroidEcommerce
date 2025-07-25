@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.main.products
+package com.example.luqtaecommerce.presentation.main.products.catalog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
 import com.example.luqtaecommerce.ui.theme.PrimaryCyan
 

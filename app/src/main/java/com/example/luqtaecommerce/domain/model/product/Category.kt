@@ -1,5 +1,7 @@
 package com.example.luqtaecommerce.domain.model.product
 
+import com.example.luqtaecommerce.domain.model.util.Meta
+
 data class CategoryResponse(
     val success: Boolean,
     val message: String,

@@ -25,6 +25,8 @@ import com.example.luqtaecommerce.domain.use_case.payment.StartPaymentSessionUse
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductDetailsUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetProductsUseCase
+import com.example.luqtaecommerce.domain.use_case.review.AddProductReviewUseCase
+import com.example.luqtaecommerce.domain.use_case.review.GetProductReviewsUseCase
 import com.example.luqtaecommerce.presentation.auth.AuthStateManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -69,4 +71,8 @@ val domainModule = module {
 
     // Payment
     single { StartPaymentSessionUseCase(get()) }
+
+    // Reviews
+    single { AddProductReviewUseCase(get()) }
+    single { GetProductReviewsUseCase(get()) }
 }

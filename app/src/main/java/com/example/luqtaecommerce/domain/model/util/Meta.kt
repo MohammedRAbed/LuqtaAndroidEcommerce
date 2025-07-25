@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.domain.model.product
+package com.example.luqtaecommerce.domain.model.util
 
 import com.google.gson.annotations.SerializedName
 

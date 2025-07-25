@@ -12,9 +12,10 @@ import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.order.Order
 import com.example.luqtaecommerce.domain.model.product.Category
-import com.example.luqtaecommerce.domain.model.product.Meta
+import com.example.luqtaecommerce.domain.model.util.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.model.product.ProductDetails
+import com.example.luqtaecommerce.domain.model.review.ProductReview
 import com.example.luqtaecommerce.domain.use_case.Result
 
 interface LuqtaRepository {
@@ -59,4 +60,8 @@ interface LuqtaRepository {
 
     // Payment
     suspend fun startPaymentSession(orderId: String): Result<String>
+
+    // Reviews
+    suspend fun addProductReview(productSlug: String, rating: Int, comment: String): Result<ProductReview>
+    suspend fun getProductReviews(productSlug: String): Result<List<ProductReview>>
 }

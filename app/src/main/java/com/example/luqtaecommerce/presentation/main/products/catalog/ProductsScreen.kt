@@ -1,4 +1,4 @@
-package com.example.luqtaecommerce.presentation.main.products
+package com.example.luqtaecommerce.presentation.main.products.catalog
 
 import android.util.Log
 import androidx.compose.foundation.background

@@ -30,6 +30,20 @@ val networkModule = module {
             .cookieJar(sessionCookieJar)
             .addInterceptor(get<AuthInterceptor>())
             .addInterceptor(logging)
+            .addNetworkInterceptor { chain ->
+                val originalRequest = chain.request()
+                val url = originalRequest.url.toString()
+                Log.e("URL", url)
+                val modifiedRequest = if (url.contains("/api/v1/products/")) {
+                    originalRequest.newBuilder()
+                        .header("Cache-Control", "no-cache")
+                        .build()
+                } else {
+                    originalRequest
+                }
+
+                chain.proceed(modifiedRequest)
+            }
             .connectTimeout(7, TimeUnit.SECONDS)
             .readTimeout(7, TimeUnit.SECONDS)
             .writeTimeout(7, TimeUnit.SECONDS)

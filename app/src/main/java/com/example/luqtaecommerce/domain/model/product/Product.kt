@@ -1,5 +1,6 @@
 package com.example.luqtaecommerce.domain.model.product
 
+import com.example.luqtaecommerce.domain.model.util.Meta
 import com.google.gson.annotations.SerializedName
 
 data class ProductCatalogResponse(

@@ -3,6 +3,7 @@ package com.example.luqtaecommerce.presentation.main.cart
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -94,6 +95,7 @@ fun CartScreen(
 
     LaunchedEffect(state.operationStatus) {
         if (state.operationStatus == CartOperationStatus.REMOVE_SUCCESS) {
+            Toast.makeText(context, "تم حذف المنتج من السلة ❌🛒", Toast.LENGTH_SHORT).show()
             viewModel.loadCart()
         }
     }

@@ -21,11 +21,14 @@ import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
 import com.example.luqtaecommerce.domain.model.order.CreateOrderRequest
 import com.example.luqtaecommerce.domain.model.product.Category
-import com.example.luqtaecommerce.domain.model.product.Meta
+import com.example.luqtaecommerce.domain.model.util.Meta
 import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.model.product.ProductDetails
+import com.example.luqtaecommerce.domain.model.review.AddProductReviewRequest
+import com.example.luqtaecommerce.domain.model.review.ProductReview
 import com.example.luqtaecommerce.domain.use_case.Result
 import com.example.luqtaecommerce.util.FileUtil
+import com.example.luqtaecommerce.util.retryIO
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -38,17 +41,14 @@ class LuqtaRepositoryImpl(
     private val tokenManager: TokenManager,
     private val userDataManager: UserDataManager,
     private val sessionManager: SessionManager
-    //private val authPreferences: AuthPreferences,
-    //private val tokenManager: TokenManager
 ) : LuqtaRepository {
-
     /* ----------------- Products & Categories -----------------*/
 
     private var cachedCategories: Result<List<Category>>? = null
 
     override suspend fun getCategories(): Result<List<Category>> {
         return cachedCategories ?: try {
-            val response = api.getCategories()
+            val response = retryIO { api.getCategories() }
             val result = if (response.success) {
                 Result.success(response.data)
             } else {
@@ -69,7 +69,9 @@ class LuqtaRepositoryImpl(
         pageSize: Int?
     ): Result<Pair<List<Product>, Meta>> {
         return try {
-            val response = api.getProducts(categorySlug, searchQuery, ordering, page, pageSize)
+            val response = retryIO {
+                api.getProducts(categorySlug, searchQuery, ordering, page, pageSize)
+            }
             if (response.success) {
                 Result.success(Pair(response.data, response.meta))
             } else {
@@ -82,7 +84,7 @@ class LuqtaRepositoryImpl(
 
     override suspend fun getProductDetails(slug: String): Result<ProductDetails> {
         return try {
-            val response = api.getProductDetails(slug)
+            val response = retryIO { api.getProductDetails(slug) }
             if (response.success) {
                 Result.success(response.data)
             } else {
@@ -431,7 +433,8 @@ class LuqtaRepositoryImpl(
         }
     }
 
-    // Payment
+    /* ----------------- Payment ----------------- */
+
     override suspend fun startPaymentSession(orderId: String): Result<String> {
         return try {
             val response = api.startPaymentSession(orderId)
@@ -439,6 +442,41 @@ class LuqtaRepositoryImpl(
                 Result.success(response.body()!!.data.paymentUrl)
             } else {
                 Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /* ----------------- Product Reviews -----------------*/
+
+    override suspend fun getProductReviews(productSlug: String): Result<List<ProductReview>> {
+        return try {
+            val response = api.getProductReviews(productSlug)
+            if (response.isSuccessful && response.body()?.success == true) {
+                val productReviewsList = response.body()!!.data
+                Result.success(productReviewsList)
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun addProductReview(productSlug: String, rating: Int, comment: String): Result<ProductReview> {
+        // Validation
+        if (rating !in 1..5) return Result.failure(Exception("التقييم يجب ان يكون بين 1 و 5"))
+        if (comment.isBlank()) return Result.failure(Exception("يجب إدخال التعليق"))
+
+        return try {
+            val body = AddProductReviewRequest(rating, comment)
+            val response = api.addProductReview(productSlug, body)
+            if (response.isSuccessful && response.body()?.success == true) {
+                val productReview = response.body()!!.data!!
+                Result.success(productReview)
+            } else {
+                Result.failure(Exception(response.body()?.message ?: response.message()))
             }
         } catch (e: Exception) {
             Result.failure(e)

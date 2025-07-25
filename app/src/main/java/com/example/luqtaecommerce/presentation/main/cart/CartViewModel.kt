@@ -1,21 +1,15 @@
 package com.example.luqtaecommerce.presentation.main.cart
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.luqtaecommerce.domain.model.cart.AddToCartRequest
 import com.example.luqtaecommerce.domain.model.cart.Cart
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponRequest
 import com.example.luqtaecommerce.domain.model.coupon.ApplyCouponResponse
-import com.example.luqtaecommerce.domain.model.product.Pagination
-import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.domain.use_case.cart.AddToCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.GetCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.ApplyCouponUseCase
-import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
