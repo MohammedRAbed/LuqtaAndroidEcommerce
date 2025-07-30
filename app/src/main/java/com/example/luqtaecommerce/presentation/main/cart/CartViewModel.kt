@@ -198,7 +198,7 @@ class CartViewModel(
                     _cartState.update {
                         it.copy(
                             isLoading = false,
-                            couponError = result.message ?: result.exception.localizedMessage
+                            couponError = /*result.message ?: result.exception.localizedMessage*/"يرجى التحقق من رمز الكوبون"
                         )
                     }
                 }

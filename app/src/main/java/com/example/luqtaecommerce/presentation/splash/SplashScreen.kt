@@ -61,7 +61,7 @@ fun SplashScreen(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.app_temp_logo2),
+            painter = painterResource(id = R.drawable.ic_luqta_logo),
             contentDescription = "App Icon" // Provide a meaningful content description
         )
     }

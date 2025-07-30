@@ -42,7 +42,7 @@ import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 
 @Composable
@@ -60,8 +60,7 @@ fun CategoriesScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
@@ -82,7 +81,7 @@ fun CategoriesScreen(
             when (categoriesState) {
                 is Result.Loading -> {
                     Box(modifier = Modifier.size(40.dp)) {
-                        CircularProgressIndicator(color = PrimaryCyan)
+                        CircularProgressIndicator(color = Purple500)
                     }
                 }
                 is Result.Success -> {
@@ -156,7 +155,8 @@ fun CategoryItem(
             )
             Text(
                 text = category.name,
-                fontSize = 14.sp,
+                fontSize = if (category.name.length >= 8) 13.sp else 14.sp,
+                maxLines = 1,
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center

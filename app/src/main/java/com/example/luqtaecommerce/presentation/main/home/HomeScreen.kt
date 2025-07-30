@@ -56,7 +56,8 @@ import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.ShimmerCategoriesRow
 import com.example.luqtaecommerce.ui.components.ShimmerProductItem
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple100
+import com.example.luqtaecommerce.ui.theme.Purple500
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
@@ -81,7 +82,6 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .padding(horizontal = 16.dp)
     ) {
 
@@ -109,7 +109,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "عرض الكل",
-                    color = PrimaryCyan,
+                    color = Purple500,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.clickable {
@@ -183,7 +183,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "عرض الكل",
-                    color = PrimaryCyan,
+                    color = Purple500,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.clickable {
@@ -288,7 +288,7 @@ fun HomeAppBar(currentUser: User?) {
             )
             Spacer(modifier = Modifier.width(5.dp))
             Image(
-                painter = painterResource(id = R.drawable.app_temp_logo2),
+                painter = painterResource(id = R.drawable.ic_luqta_logo),
                 modifier = Modifier.size(32.dp),
                 contentDescription = "App Icon" // Provide a meaningful content description
             )
@@ -339,7 +339,7 @@ private fun WelcomeHeader(currentUser: User?, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF8DDDCF)
+            containerColor = Purple100
         )
     ) {
 
@@ -381,7 +381,7 @@ private fun WelcomeHeader(currentUser: User?, navController: NavController) {
                     modifier = Modifier,
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Text(

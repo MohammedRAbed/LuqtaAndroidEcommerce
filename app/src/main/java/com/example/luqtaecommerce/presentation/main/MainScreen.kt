@@ -53,6 +53,7 @@ import com.example.luqtaecommerce.presentation.main.orders.OrdersScreen
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.presentation.navigation.bottomNavItems
 import com.example.luqtaecommerce.ui.theme.LightPrimary
+import com.example.luqtaecommerce.ui.theme.Purple50
 import org.koin.androidx.compose.navigation.koinNavViewModel
 import org.koin.compose.koinInject
 
@@ -91,7 +92,7 @@ fun MainScreen(
         bottomBar = {
             if (!hideBottomBar) {
                 NavigationBar(
-                    containerColor = Color.White,
+                    containerColor = Purple50,
                     modifier = Modifier
                         .fillMaxWidth()
                         .drawBehind {
@@ -268,7 +269,8 @@ fun MainScreen(
                 val slug = backStackEntry.arguments?.getString("slug")
                 ProductDetailsScreen(
                     navController = navController,
-                    slug = slug!!
+                    slug = slug!!,
+                    currentUser = userState
                 )
             }
 

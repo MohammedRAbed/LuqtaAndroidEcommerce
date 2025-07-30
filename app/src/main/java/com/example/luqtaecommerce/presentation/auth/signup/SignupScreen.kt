@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,13 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -39,13 +33,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LuqtaButton
-import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
-import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LuqtaEcommerceTheme
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
-import com.example.luqtaecommerce.ui.theme.RedFont
+import com.example.luqtaecommerce.ui.theme.Purple500
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -80,7 +70,6 @@ fun SignupScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 35.dp),
         verticalArrangement = Arrangement.Top
@@ -106,7 +95,7 @@ fun SignupScreen(
                 text = stringResource(R.string.login),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = PrimaryCyan,
+                color = Purple500,
                 modifier = Modifier.clickable {
                     navController.popBackStack()
                 }
@@ -162,6 +151,7 @@ fun SignupScreen(
 
             if (signupState.currentStep <= 2) {
                 if (signupState.currentStep == 2) {
+                    Spacer(modifier = Modifier.width(5.dp))
                     LuqtaButton(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.add_account),
@@ -169,6 +159,17 @@ fun SignupScreen(
                         enabled = !signupState.isLoading
                     )
                 } else {
+                    LuqtaButton(
+                        text = "التالي",
+                        onClick = { viewModel.nextStep() },
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(
+                                color = Color.LightGray,
+                                width = 1.dp,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                    )/*
                     Button(
                         onClick = { viewModel.nextStep() },
                         modifier = Modifier
@@ -190,7 +191,7 @@ fun SignupScreen(
                             fontSize = 16.sp,
                             modifier = Modifier.padding(vertical = 11.dp)
                         )
-                    }
+                    }*/
                 }
             }
         }
@@ -203,7 +204,7 @@ fun SignupScreen(
                     .size(100.dp)
                     .padding(vertical = 8.dp)
                     .align(Alignment.CenterHorizontally),
-                color = PrimaryCyan
+                color = Purple500
             )
         }
     }

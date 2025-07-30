@@ -26,7 +26,7 @@ val viewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
     viewModel { CategoriesViewModel(get()) }
     viewModel { ProductsViewModel(get()) }
-    viewModel { ProductDetailsViewModel(get(), get(), get()) }
+    viewModel { ProductDetailsViewModel(get(), get(), get(), get()) }
     viewModel {
         ProfileViewModel(
             authStateManager = get(),

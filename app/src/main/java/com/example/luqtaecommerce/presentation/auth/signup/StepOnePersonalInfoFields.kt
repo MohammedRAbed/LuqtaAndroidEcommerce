@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,26 +50,29 @@ fun StepOnePersonalFields(viewModel: SignupViewModel) {
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            LuqtaTextField(
-                modifier = Modifier.weight(1f),
-                value = signupState.firstName,
-                onValueChange = { viewModel.onFirstNameChange(it) },
-                placeholder = "الاسم الأول",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                isValid = signupState.isFirstNameValid,
-                errorMessage = signupState.firstNameError
-            )
-            LuqtaTextField(
-                modifier = Modifier.weight(1f),
-                value = signupState.lastName,
-                onValueChange = { viewModel.onLastNameChange(it) },
-                placeholder = "اسم العائلة",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next,
-                isValid = signupState.isLastNameValid,
-                errorMessage = signupState.lastNameError
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                LuqtaTextField(
+                    value = signupState.firstName,
+                    onValueChange = { viewModel.onFirstNameChange(it) },
+                    placeholder = "الاسم الأول",
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    isValid = signupState.isFirstNameValid,
+                    errorMessage = signupState.firstNameError
+                )
+            }
+            Spacer(modifier = Modifier.width(5.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                LuqtaTextField(
+                    value = signupState.lastName,
+                    onValueChange = { viewModel.onLastNameChange(it) },
+                    placeholder = "اسم العائلة",
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    isValid = signupState.isLastNameValid,
+                    errorMessage = signupState.lastNameError
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

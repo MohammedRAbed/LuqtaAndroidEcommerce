@@ -64,9 +64,10 @@ import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.components.ShimmerProductsGrid
+import com.example.luqtaecommerce.ui.theme.CairoFontFamily
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -191,7 +192,8 @@ fun ProductsScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_filter),
-                        contentDescription = "Filter"
+                        contentDescription = "Filter",
+                        tint = Purple500,
                     )
                 }
 
@@ -202,6 +204,7 @@ fun ProductsScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
+                        tint = Purple500,
                         contentDescription = "Search"
                     )
                 }
@@ -274,7 +277,7 @@ fun ProductsScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (productsUiState.isLoading && productsUiState.pagination?.next != null) {
-                                    CircularProgressIndicator(color = PrimaryCyan)
+                                    CircularProgressIndicator(color = Purple500)
                                 } else {
                                     Text(
                                         text = "لا مزيد من المنتجات",
@@ -339,6 +342,7 @@ fun ProductItem(
                 Text(
                     text = product.name,
                     fontSize = 18.sp,
+                    fontFamily = CairoFontFamily,
                     style = TextStyle(
                         lineHeight = 5.sp
                     ),

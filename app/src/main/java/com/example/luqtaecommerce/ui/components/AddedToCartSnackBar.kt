@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,9 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.example.luqtaecommerce.R
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 @Composable
 fun AddedToCartSnackBar(
@@ -80,7 +78,7 @@ fun AddedToCartSnackBar(
                 TextButton(onClick = onViewCart) {
                     Text(
                         text = "عرض السلة",
-                        color = PrimaryCyan,
+                        color = Purple500,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )

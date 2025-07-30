@@ -110,7 +110,13 @@ class LuqtaRepositoryImpl(
                 Result.failure(HttpException(response), response.message() ?: "Registration failed")
             }
         } catch (e: Exception) {
-            Log.e("Signup", e.message.toString())
+            Log.e("SignupL", e.message.toString())
+            if (e.message!=null) {
+                val errorMsg = e.message.toString()
+                if (errorMsg.contains("unexpected") || errorMsg.contains("timeout")) {
+                    Result.success("Registration Successful")
+                }
+            }
             Result.failure(e, "An unexpected error occurred.")
         }
     }
@@ -476,7 +482,11 @@ class LuqtaRepositoryImpl(
                 val productReview = response.body()!!.data!!
                 Result.success(productReview)
             } else {
-                Result.failure(Exception(response.body()?.message ?: response.message()))
+                val errorMessage = when (response.code()) {
+                    403 -> "لا يمكنك تقييم المنتجات التي لم تشترها مسبقا" // Custom message for Forbidden
+                    else -> response.body()?.message ?: response.message()
+                }
+                Result.failure(Exception(errorMessage), errorMessage)
             }
         } catch (e: Exception) {
             Result.failure(e)

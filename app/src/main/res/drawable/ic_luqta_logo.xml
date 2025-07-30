@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="76dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+
+    <!-- Bag body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="0.2"
+        android:pathData="M8,12 h24 a6,6 0 0 1 6,6 v8 a6,6 0 0 1 -6,6 h-24 a6,6 0 0 1 -6,-6 v-8 a6,6 0 0 1 6,-6 z" />
+
+    <!-- Handles -->
+    <path
+        android:strokeColor="#FF8B5CF6"
+        android:strokeWidth="2.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M14,16 L14,12 a6,6 0 0 1 12,0 v4" />
+
+    <!-- Checkmark -->
+    <path
+        android:strokeColor="#FF8B5CF6"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M16,24 l4,4 6,-7" />
+</vector>

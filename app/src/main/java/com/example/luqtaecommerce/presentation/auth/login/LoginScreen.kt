@@ -40,7 +40,7 @@ import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.components.LuqtaPasswordTextField
 import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
@@ -81,7 +81,6 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 35.dp),
         verticalArrangement = Arrangement.Top
@@ -107,7 +106,7 @@ fun LoginScreen(
                 text = stringResource(R.string.create_new_account),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = PrimaryCyan,
+                color = Purple500,
                 modifier = Modifier.clickable {
                     navController.navigate(Screen.Signup.route)
                 }
@@ -184,7 +183,7 @@ fun LoginScreen(
                     },
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
-                color = PrimaryCyan
+                color = Purple500
             )
         }
 
@@ -194,7 +193,7 @@ fun LoginScreen(
                     .size(100.dp)
                     .padding(vertical = 8.dp)
                     .align(Alignment.CenterHorizontally),
-                color = PrimaryCyan
+                color = Purple500
             )
         } else {
             LuqtaButton(

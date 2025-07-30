@@ -1,6 +1,5 @@
 package com.example.luqtaecommerce.presentation.auth.activation
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,7 @@ import androidx.navigation.NavController
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 @Composable
 fun CheckEmailScreen(
@@ -41,7 +40,7 @@ fun CheckEmailScreen(
         Icon(
             imageVector = Icons.Default.Email,
             contentDescription = null,
-            tint = PrimaryCyan,
+            tint = Purple500,
             modifier = Modifier.size(100.dp)
         )
 

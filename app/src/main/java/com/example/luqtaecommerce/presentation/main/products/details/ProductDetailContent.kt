@@ -45,7 +45,7 @@ import com.example.luqtaecommerce.domain.model.product.ProductDetails
 import com.example.luqtaecommerce.presentation.main.cart.CartState
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -133,7 +133,7 @@ fun ProductDetailContent(
                     modifier = Modifier.size(10.dp)
                 )
             }
-            if (product.rating.average % 2 != 0.0) {
+            if (product.rating.average % 1 != 0.0) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_star_half_filled), // You'll need a filled star icon
                     contentDescription = "Star",
@@ -142,7 +142,7 @@ fun ProductDetailContent(
                 )
             }
             repeat(
-                if (product.rating.average % 2 != 0.0)
+                if (product.rating.average % 1 != 0.0)
                     5 - (product.rating.average.toInt() + 1)
                 else 5 - product.rating.average.toInt()
             ) {
@@ -192,7 +192,7 @@ fun ProductDetailContent(
                     TextButton(onClick = { showFullDescription = !showFullDescription }) {
                         Text(
                             text = "قراءة المزيد",
-                            color = PrimaryCyan,
+                            color = Purple500,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.End,
                             modifier = Modifier.padding(top = 4.dp)
@@ -274,7 +274,7 @@ fun ProductDetailContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple500),
                     shape = RoundedCornerShape(12.dp),
                     enabled = !cartState.isLoading && !showAddToCart
                 ) {

@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,20 +38,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.domain.model.order.Order
-import com.example.luqtaecommerce.domain.model.order.OrderItem
-import com.example.luqtaecommerce.domain.model.product.Product
 import com.example.luqtaecommerce.ui.components.EmptyContentView
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
-import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple50
+import com.example.luqtaecommerce.ui.theme.Purple500
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -67,26 +61,34 @@ fun OrdersScreen(
 
     Scaffold(
         topBar = {
-            LuqtaBackHeader(title = "الطلبات", navController = navController)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                LuqtaBackHeader(title = "الطلبات", navController = navController)
+            }
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                contentColor = Color.Black,
+                contentColor = Purple500,
+                containerColor = Purple50,
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier
                             .tabIndicatorOffset(tabPositions[selectedTabIndex])
                             .height(3.dp)
                             .padding(horizontal = 16.dp),
-                        color = Color.Black
+                        color = Purple500
                     )
                 }
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
-                        selectedContentColor = Color.Black,
+                        selectedContentColor = Purple500,
                         unselectedContentColor = Color.Gray,
                         selected = selectedTabIndex == index,
                         onClick = { selectedTabIndex = index },
@@ -97,7 +99,7 @@ fun OrdersScreen(
 
             if (ordersState.isLoading) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = PrimaryCyan)
+                    CircularProgressIndicator(color = Purple500)
                 }
             } else if (ordersState.error != null) {
                 LoadErrorView { viewModel.retryFetchingOrders() }

@@ -19,7 +19,7 @@ import com.example.luqtaecommerce.presentation.main.products.model.SortOption
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 @Composable
 fun SortBottomSheetContent(
@@ -78,7 +78,7 @@ private fun SortOptionItem(
         ) {
             RadioButton(
                 colors = RadioButtonColors(
-                    selectedColor = PrimaryCyan,
+                    selectedColor = Purple500,
                     unselectedColor = Color.Black,
                     disabledUnselectedColor = GrayFont,
                     disabledSelectedColor = GrayFont

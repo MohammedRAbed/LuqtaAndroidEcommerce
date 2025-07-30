@@ -46,7 +46,7 @@ import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswo
 import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswordViewModel
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 
 @Composable
@@ -89,7 +89,7 @@ fun CodeVerificationStep(
             text = stringResource(R.string.resend_code),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = PrimaryCyan,
+            color = Purple500,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { viewModel.onSendEmail() },
@@ -105,7 +105,7 @@ fun CodeVerificationStep(
                     .size(100.dp)
                     .padding(vertical = 8.dp)
                     .align(Alignment.CenterHorizontally),
-                color = PrimaryCyan
+                color = Purple500
             )
         } else {
             LuqtaButton(
@@ -171,9 +171,9 @@ private fun VerificationCodeInput(
                                             width = 1.dp,
                                             color = when {
                                                 codeValue.isEmpty() -> Color.Gray
-                                                isValid == true -> PrimaryCyan
+                                                isValid == true -> Purple500
                                                 isValid == false -> RedFont
-                                                else -> if (isFilled) PrimaryCyan else Color.Gray
+                                                else -> if (isFilled) Purple500 else Color.Gray
                                             },
                                             shape = MaterialTheme.shapes.small
                                         )

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 
 @Composable
@@ -42,13 +42,13 @@ fun LuqtaTextField(
             imeAction = imeAction
         ),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryCyan,
+            focusedBorderColor = Purple500,
             unfocusedBorderColor = when {
                 value.isEmpty() -> LightPrimary
-                isValid == true -> PrimaryCyan
+                isValid == true -> Purple500
                 else -> RedFont
             },
-            cursorColor = PrimaryCyan
+            cursorColor = Purple500
         )
     )
 

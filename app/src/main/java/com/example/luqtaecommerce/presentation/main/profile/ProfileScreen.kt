@@ -26,12 +26,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.domain.model.auth.User
-import com.example.luqtaecommerce.presentation.main.MainViewModel
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.LuqtaButton
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import org.koin.androidx.compose.navigation.koinNavViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ProfileScreen(
@@ -100,7 +98,7 @@ fun ProfileScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         if (isLoading) {
-            CircularProgressIndicator(color = PrimaryCyan)
+            CircularProgressIndicator(color = Purple500)
             Spacer(modifier = Modifier.height(4.dp))
             Text("جاري تسجيل الخروج...")
         }

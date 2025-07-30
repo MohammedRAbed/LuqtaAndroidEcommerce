@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,9 +91,9 @@ fun ProductSearchScreen(
                         imeAction = ImeAction.Search
                     ),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = PrimaryCyan,
+                        focusedBorderColor = Purple500,
                         unfocusedBorderColor = GrayPlaceholder,
-                        cursorColor = PrimaryCyan
+                        cursorColor = Purple500
                     ),
                     leadingIcon = {
                         IconButton(
@@ -126,7 +126,7 @@ fun ProductSearchScreen(
             if (searchState.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = PrimaryCyan
+                    color = Purple500
                 )
             } else {
                 if (searchState.suggestions.isEmpty()) {

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,30 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,24 +38,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
-import com.example.luqtaecommerce.domain.model.product.ProductDetails
-import com.example.luqtaecommerce.domain.model.review.ProductReview
+import com.example.luqtaecommerce.domain.model.auth.User
 import com.example.luqtaecommerce.domain.use_case.Result
-import com.example.luqtaecommerce.presentation.main.cart.CartState
 import com.example.luqtaecommerce.presentation.main.cart.CartViewModel
 import com.example.luqtaecommerce.ui.components.FavouriteToggleIcon
 import com.example.luqtaecommerce.ui.components.LoadErrorView
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
-import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple50
+import com.example.luqtaecommerce.ui.theme.Purple500
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnrememberedGetBackStackEntry")
@@ -74,6 +58,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ProductDetailsScreen(
     navController: NavController,
     slug: String,
+    currentUser: User?,
     productDetailsViewModel: ProductDetailsViewModel = koinViewModel(),
     cartViewModel: CartViewModel = koinViewModel()
 ) {
@@ -82,6 +67,7 @@ fun ProductDetailsScreen(
 
     val reviewsState by productDetailsViewModel.productReviewsState.collectAsState()
     val addReviewState by productDetailsViewModel.addReviewState.collectAsState()
+    val hasUserReviewed by productDetailsViewModel.hasUserReviewed.collectAsState()
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
@@ -91,8 +77,9 @@ fun ProductDetailsScreen(
     }
 
     LaunchedEffect(selectedTabIndex) {
-        if (selectedTabIndex==1)
+        if (selectedTabIndex==1) {
             productDetailsViewModel.getReviews(slug)
+        }
     }
 
     LaunchedEffect(showAddToCartMessage) {
@@ -104,7 +91,7 @@ fun ProductDetailsScreen(
         productDetailsViewModel.productDetailsState.collectAsState().value) {
         is Result.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = PrimaryCyan)
+                CircularProgressIndicator(color = Purple500)
             }
         }
 
@@ -214,7 +201,7 @@ fun ProductDetailsScreen(
                         ) {
                             TabRow(
                                 selectedTabIndex = selectedTabIndex,
-                                contentColor = Color.Black,
+                                contentColor = Purple500,
                                 containerColor = Color.White,
                                 indicator = { tabPositions ->
                                     TabRowDefaults.SecondaryIndicator(
@@ -222,13 +209,13 @@ fun ProductDetailsScreen(
                                             .tabIndicatorOffset(tabPositions[selectedTabIndex])
                                             .height(3.dp)
                                             .padding(horizontal = 16.dp),
-                                        color = Color.Black
+                                        color = Purple500
                                     )
                                 }
                             ) {
                                 tabs.forEachIndexed { index, title ->
                                     Tab(
-                                        selectedContentColor = Color.Black,
+                                        selectedContentColor = Purple500,
                                         unselectedContentColor = Color.Gray,
                                         selected = selectedTabIndex == index,
                                         onClick = { selectedTabIndex = index },
@@ -253,6 +240,8 @@ fun ProductDetailsScreen(
                                     ProductDetailReviews(
                                         reviewsState = reviewsState,
                                         addReviewState = addReviewState,
+                                        hasUserReviewed = hasUserReviewed,
+                                        currentUser = currentUser,
                                         onAddReview = { rating, comment ->
                                             productDetailsViewModel.addReview(
                                                 slug, rating, comment

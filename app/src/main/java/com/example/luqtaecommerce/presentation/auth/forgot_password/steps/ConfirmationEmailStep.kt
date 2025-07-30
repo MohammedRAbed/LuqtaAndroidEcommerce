@@ -26,7 +26,7 @@ import com.example.luqtaecommerce.presentation.auth.forgot_password.ForgotPasswo
 import com.example.luqtaecommerce.ui.components.LuqtaButton
 import com.example.luqtaecommerce.ui.components.LuqtaTextField
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 
 @Composable
@@ -89,7 +89,7 @@ fun ConfirmationEmailStep(
                     .size(100.dp)
                     .padding(vertical = 8.dp)
                     .align(Alignment.CenterHorizontally),
-                color = PrimaryCyan
+                color = Purple500
             )
         } else {
             LuqtaButton(

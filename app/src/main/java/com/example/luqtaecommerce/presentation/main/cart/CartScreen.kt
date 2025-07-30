@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,12 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.EmptyContentView
@@ -38,30 +34,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.luqtaecommerce.ui.components.LoadErrorView
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.domain.model.cart.CartItem
-import com.example.luqtaecommerce.ui.components.LuqtaButton
-import com.example.luqtaecommerce.ui.theme.LightPrimary
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -100,17 +87,23 @@ fun CartScreen(
         }
     }
 
+    LaunchedEffect(state.couponResult) {
+        if (state.couponResult!=null) {
+            if (state.couponResult.success) {
+                Toast.makeText(context, "تم تفعيل رمز الكوبون✅", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     // This effect launches the browser when the paymentUrl is received
     LaunchedEffect(paymentUrl) {
         paymentUrl?.let { url ->
-            //...
-            navController.navigate(Screen.Home.route) {
+            navController.navigate(Screen.Orders.route) {
                 popUpTo(Screen.Cart.route) { inclusive = true }
                 launchSingleTop = true
             }
-
-            delay(100)
-
+            Toast.makeText(context,"جار التحويل لصفحة الدفع...", Toast.LENGTH_LONG).show()
+            
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             context.startActivity(intent)
             viewModel.onPaymentUrlLaunched() // Reset the state
@@ -165,7 +158,7 @@ fun CartScreen(
         .background(Color.White)) {
         when {
             state.isLoading -> {
-                CircularProgressIndicator(color = PrimaryCyan, modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(color = Purple500, modifier = Modifier.align(Alignment.Center))
             }
             state.error != null -> {
                 LoadErrorView(onClick = { viewModel.loadCart() })
@@ -206,7 +199,7 @@ fun CartScreen(
                         )
                         Text(
                             text = "كوبون الخصم",
-                            color = if(state.cart.coupon == null) PrimaryCyan else GrayFont,
+                            color = if(state.cart.coupon == null) Purple500 else GrayFont,
                             fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
                             modifier = if(state.cart.coupon == null) {

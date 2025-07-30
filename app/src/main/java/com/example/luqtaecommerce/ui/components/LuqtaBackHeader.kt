@@ -21,7 +21,7 @@ import com.example.luqtaecommerce.R
 fun LuqtaBackHeader(title: String, navController: NavController) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 12.dp),
+        modifier = Modifier.padding(horizontal = 15.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.Start
     ) {
         IconButton(

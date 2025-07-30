@@ -34,19 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.domain.model.auth.User
-import com.example.luqtaecommerce.presentation.auth.signup.SignupViewModel
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
 import com.example.luqtaecommerce.ui.components.LuqtaButton
-import com.example.luqtaecommerce.ui.theme.GrayFont
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -144,7 +140,7 @@ fun AddProfilePicScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
             if (isUploading)
-                CircularProgressIndicator(color = PrimaryCyan)
+                CircularProgressIndicator(color = Purple500)
         }
     }
 }

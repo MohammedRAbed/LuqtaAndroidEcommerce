@@ -1,8 +1,6 @@
 package com.example.luqtaecommerce.ui.theme
 
-import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -18,9 +16,9 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    /*primary = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40*/
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -31,13 +29,32 @@ private val LightColorScheme = lightColorScheme(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
+
+    primary            = Purple500,
+    onPrimary          = White,
+    primaryContainer   = Purple100,
+    onPrimaryContainer = Purple700,
+
+    secondary          = Purple200,
+    onSecondary        = Gray800,
+
+    background         = Purple50,
+    onBackground       = Gray900,
+
+    surface            = White,
+    onSurface          = Gray900,
+
+    error               = Red500,
+    onError             = White,
+    errorContainer      = Red100,
+    onErrorContainer    = Red700
 )
 
 @Composable
 fun LuqtaEcommerceTheme(
     darkTheme: Boolean = false/*isSystemInDarkTheme()*/,
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

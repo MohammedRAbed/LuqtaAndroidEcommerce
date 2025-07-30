@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -17,12 +18,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.ui.theme.GrayPlaceholder
 import com.example.luqtaecommerce.ui.theme.LightPrimary
-import com.example.luqtaecommerce.ui.theme.PrimaryCyan
+import com.example.luqtaecommerce.ui.theme.Purple500
 import com.example.luqtaecommerce.ui.theme.RedFont
 
 @Composable
@@ -51,19 +53,21 @@ fun LuqtaPasswordTextField(
         trailingIcon = {
             IconButton(onClick = onTogglePasswordVisibility) {
                 Icon(
-                    painter = if (passwordVisible) painterResource(id = R.drawable.visible_icon) else painterResource(id = R.drawable.hidden_icon),
+                    painter = if (passwordVisible) painterResource(id = R.drawable.visible_icon) else painterResource(
+                        id = R.drawable.hidden_icon
+                    ),
                     contentDescription = if (passwordVisible) "Hide password" else "Show password"
                 )
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = PrimaryCyan,
+            focusedBorderColor = Purple500,
             unfocusedBorderColor = when {
                 value.isEmpty() -> LightPrimary
-                isValid == true -> PrimaryCyan
+                isValid == true -> Purple500
                 else -> RedFont
             },
-            cursorColor = PrimaryCyan
+            cursorColor = Purple500
         )
     )
 
