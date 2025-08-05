@@ -106,8 +106,10 @@ class LuqtaRepositoryImpl(
                 // Backend may return a success message
                 Result.success(response.message() ?: "Registration successful")
             } else {
-                //val errorBody = response.errorBody()?.string() ?: response.body()?.message
-                Result.failure(HttpException(response), response.message() ?: "Registration failed")
+                when (response.code()) {
+                    500 -> Result.failure(HttpException(response), "يوجد مشكلة في الخادم، يرجى المحاولة في وقت لاحق")
+                    else -> Result.failure(HttpException(response), "يرجى التحقق من الحقول المضافة")
+                }
             }
         } catch (e: Exception) {
             Log.e("SignupL", e.message.toString())
@@ -117,7 +119,7 @@ class LuqtaRepositoryImpl(
                     Result.success("Registration Successful")
                 }
             }
-            Result.failure(e, "An unexpected error occurred.")
+            Result.failure(e, "يوجد مشكلة في الخادم، يرجى المحاولة في وقت لاحق")
         }
     }
 

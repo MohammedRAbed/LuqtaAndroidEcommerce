@@ -50,6 +50,7 @@ import com.example.luqtaecommerce.presentation.main.products.catalog.ProductsVie
 import com.example.luqtaecommerce.presentation.main.profile.AddProfilePicScreen
 import com.example.luqtaecommerce.presentation.main.profile.ProfileScreen
 import com.example.luqtaecommerce.presentation.main.orders.OrdersScreen
+import com.example.luqtaecommerce.presentation.main.orders.details.OrderDetailsScreen
 import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.presentation.navigation.bottomNavItems
 import com.example.luqtaecommerce.ui.theme.LightPrimary
@@ -79,7 +80,8 @@ fun MainScreen(
 
     val hiddenBarRoutes = listOf(
         Screen.Products.route,
-        Screen.ProductDetails.route
+        Screen.ProductDetails.route,
+        Screen.OrderDetails.route
     )
     val hideBottomBar = hiddenBarRoutes.any { route ->
         currentRoute?.contains(route) == true
@@ -271,6 +273,44 @@ fun MainScreen(
                     navController = navController,
                     slug = slug!!,
                     currentUser = userState
+                )
+            }
+
+
+            composable(
+                route = Screen.OrderDetails.route + "/{orderId}",
+                enterTransition = {
+                    slideInHorizontally(
+                        initialOffsetX = { -it }, // 👉 from left
+                        animationSpec = tween(600)
+                    )
+                },
+                exitTransition = {
+                    slideOutHorizontally(
+                        targetOffsetX = { it }, // 👉 to right
+                        animationSpec = tween(600)
+                    )
+                },
+                popEnterTransition = {
+                    slideInHorizontally(
+                        initialOffsetX = { it }, // 👈 from right
+                        animationSpec = tween(600)
+                    )
+                },
+                popExitTransition = {
+                    slideOutHorizontally(
+                        targetOffsetX = { -it }, // 👈 to left
+                        animationSpec = tween(600)
+                    )
+                }
+            ) { backStackEntry ->
+                LaunchedEffect(Unit) {
+                    previousRoute = Screen.OrderDetails.route // track correctly
+                }
+                val orderId = backStackEntry.arguments?.getString("orderId")
+                OrderDetailsScreen(
+                    navController = navController,
+                    orderId = orderId!!,
                 )
             }
 

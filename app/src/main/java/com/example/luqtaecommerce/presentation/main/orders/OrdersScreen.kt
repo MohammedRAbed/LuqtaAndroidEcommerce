@@ -12,13 +12,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.luqtaecommerce.R
 import com.example.luqtaecommerce.domain.model.order.Order
+import com.example.luqtaecommerce.presentation.navigation.Screen
 import com.example.luqtaecommerce.ui.components.EmptyContentView
 import com.example.luqtaecommerce.ui.components.LoadErrorView
 import com.example.luqtaecommerce.ui.components.LuqtaBackHeader
@@ -141,7 +148,11 @@ fun OrderList(orders: List<Order>, navController: NavController) {
                     price = order.totalPrice,
                     status = order.status,
                     date = order.orderDate // You'll want to format this date
-                )
+                ) {
+                    navController.navigate(
+                        "${Screen.OrderDetails.route}/${order.orderId}"
+                    )
+                }
             }
         }
     } else {
@@ -166,7 +177,8 @@ fun OrderItemCard(
     title: String,
     price: String,
     status: String,
-    date: String
+    date: String,
+    onClick: () -> Unit
 ) {
     Column {
         Card(
@@ -224,6 +236,17 @@ fun OrderItemCard(
                         color = Color.Gray,
                         fontSize = 12.sp
                     ) // Display YYYY-MM-DD
+                }
+
+                Column(modifier = Modifier.weight(0.2f)) {
+                    IconButton(onClick = onClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            tint = Color.Black,
+                            modifier = Modifier.size(20.dp),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }

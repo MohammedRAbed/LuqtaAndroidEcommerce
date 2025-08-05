@@ -20,6 +20,7 @@ import com.example.luqtaecommerce.domain.use_case.cart.GetCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.RemoveFromCartUseCase
 import com.example.luqtaecommerce.domain.use_case.cart.ApplyCouponUseCase
 import com.example.luqtaecommerce.domain.use_case.order.CreateOrderUseCase
+import com.example.luqtaecommerce.domain.use_case.order.GetOrderByIdUseCase
 import com.example.luqtaecommerce.domain.use_case.order.GetOrdersUseCase
 import com.example.luqtaecommerce.domain.use_case.payment.StartPaymentSessionUseCase
 import com.example.luqtaecommerce.domain.use_case.product.GetCategoriesUseCase
@@ -67,6 +68,7 @@ val domainModule = module {
 
     // Orders
     single { GetOrdersUseCase(get()) }
+    single { GetOrderByIdUseCase(get()) }
     single { CreateOrderUseCase(get()) }
 
     // Payment
