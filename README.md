@@ -5,6 +5,8 @@ This app is my graduation project for the **2024–2025 academic year**.
 
 > 🎓 Developed as part of my final year research at ***Islamic University of Gaza***.
 
+[🎥 Watch Demo Video on youtube](https://youtu.be/TQR5NMoQviI?si=vOj-cYJBhJlFpfxj)
+
 ---
 
 ## 📱 About the App
